@@ -552,6 +552,7 @@ table.mini td.num,table.mini th.num{text-align:right;font-variant-numeric:tabula
 table.mini tr.enough td{color:var(--ok);font-weight:600}
 table.mini tbody tr:last-child td{border-bottom:0}
 .tiny2{color:var(--ink-2)}
+.width-diff{margin:11px 0 0;font-size:13.5px;line-height:1.5;color:var(--ink-2)}
 /* На узком экране таблица из трёх колонок не влезает и уезжает вбок — на
    лендинге это хуже, чем отсутствие таблицы. Ниже 430 px строки становятся
    блоками с подписями, и прокручивать нечего. */
@@ -766,6 +767,7 @@ table.mini tbody tr:last-child td{border-bottom:0}
           <button type="button" data-w="100" aria-pressed="false">100 см · 18 ячеек</button>
           <button type="button" data-w="120" aria-pressed="true">120 см · 24 ячейки</button>
         </div>
+        <p class="width-diff" id="widthDiff">—</p>
       </div>
     </div>
   </div>
@@ -1269,6 +1271,22 @@ table.mini tbody tr:last-child td{border-bottom:0}
         plural(fit,'стеллаж','стеллажа','стеллажей') + '. Полная загрузка этого места дала бы <b>' +
         fmt(atFit.total) + ' ₽ в месяц</b>' +
         (fit > state.racks ? ' — на ' + fmt(atFit.total - r.total) + ' ₽ больше, чем сейчас в расчёте.' : '.');
+    }
+
+    /* Ширина решает больше цены: коробка 280 мм по фронту, в 120 см встаёт
+       четыре в ряд, в 100 см — три. Разницу считаем, а не заявляем. */
+    var wide   = pvzIncome({ racks:state.racks, widthCm:120, levels:state.levels,
+                             fill:state.fill/100, returnsPerMonth:state.returns });
+    var narrow = pvzIncome({ racks:state.racks, widthCm:100, levels:state.levels,
+                             fill:state.fill/100, returnsPerMonth:state.returns });
+    var gapYear = (wide.total - narrow.total) * 12;
+    var wd = $('widthDiff');
+    if (wd) {
+      wd.innerHTML = state.width >= 120
+        ? 'Вы выбрали широкий. Узкий в прайсах дешевле примерно на 1 500 \u20BD, а приносит на <b>' +
+          fmt(gapYear) + ' \u20BD меньше за год</b> — разница окупается в первый месяц.'
+        : 'Узкий в прайсах дешевле примерно на 1 500 \u20BD, но за год приносит на <b>' +
+          fmt(gapYear) + ' \u20BD меньше</b> широкого: три коробки в ряд вместо четырёх.';
     }
 
     window.__lead = { income: Math.round(r.total), racks: state.racks,
