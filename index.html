@@ -923,6 +923,20 @@ table.mini tbody tr:last-child td{border-bottom:0}
         это тот же поставщик и одна доставка.</p>
       </div>
       <div class="field">
+        <label for="fPoints">Сколько у вас пунктов</label>
+        <div class="selectwrap">
+          <select id="fPoints" name="points">
+            <option value="1">один</option>
+            <option value="2-3">два-три</option>
+            <option value="4-10">от четырёх до десяти</option>
+            <option value="10+">больше десяти</option>
+            <option value="открываю">пока ни одного, открываю первый</option>
+          </select>
+        </div>
+        <p class="note" style="margin-top:7px">Для нескольких точек считаем и везём
+        разом — так дешевле и вам, и нам.</p>
+      </div>
+      <div class="field">
         <label for="fCount">Сколько комплектов нужно</label>
         <div class="selectwrap">
           <select id="fCount" name="count">
@@ -1442,6 +1456,7 @@ table.mini tbody tr:last-child td{border-bottom:0}
       'Город: ' + city + '\n' +
       'Контакт: ' + contact + '\n' +
       'Комплектов: ' + $('fCount').value + '\n' +
+      'Пунктов у клиента: ' + $('fPoints').value + '\n' +
       ($('fAlso').value ? 'Нужно ещё: ' + $('fAlso').value + '\n' : '') +
       '— расчёт с сайта —\n' +
       'Стеллажей: ' + l.racks + ' по ' + l.width + ' см, заполнение ' + l.fill + ' %, ' +
