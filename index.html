@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Сколько ПВЗ заработает на хранении товаров Ozon — калькулятор</title>
+<meta name="description" content="Считаем доход пункта выдачи от программы хранения Ozon и проверяем, выдержит ли ваш стеллаж 120 кг по ГОСТ. Без регистрации, за минуту.">
+<meta name="theme-color" content="#EEF0EE" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14181C" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="Сколько ваш ПВЗ заработает на хранении Ozon">
+<meta property="og:description" content="Калькулятор дохода и проверка стеллажа на 120 кг по ГОСТ Р 55525-2017.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23173250'/%3E%3Cg fill='%23fff'%3E%3Crect x='7' y='8' width='18' height='2.6' rx='1'/%3E%3Crect x='7' y='14.7' width='18' height='2.6' rx='1'/%3E%3Crect x='7' y='21.4' width='18' height='2.6' rx='1'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Onest:wght@400;500;600;700&display=swap">
+<script>
+/* Ставим метку до первой отрисовки, иначе секции моргнут. Прячем содержимое
+   только там, где точно сможем его вернуть. */
+if ('IntersectionObserver' in window) document.documentElement.classList.add('js');
+</script>
+<style>
+/* ─────────────────────────────────────────────────────────────────────────
+   Палитра склада: RAL 7035 — в этот цвет красят сами стеллажи, графит и
+   сигнальный янтарь с погрузочной техники. Ничего «дизайнерского»: цвета
+   взяты из среды, в которой человек работает каждый день.
+   ───────────────────────────────────────────────────────────────────────── */
+:root{
+  --bg:#EDEFEC; --bg-2:#E3E7E2; --card:#FFFFFF;
+  --ink:#12171B; --ink-2:#59636C; --ink-3:#8A939B;
+  --line:#D2D8D2; --line-2:#E4E8E3;
+  --brand:#173250; --brand-ink:#FFFFFF;
+  --signal:#D96E07; --signal-soft:#FBEBDC;
+  --ok:#1C7340; --ok-soft:#E1F0E6;
+  --bad:#B32D18; --bad-soft:#FAE6E1;
+  --shadow-s:0 1px 2px rgba(18,23,27,.07);
+  --shadow-m:0 2px 4px rgba(18,23,27,.06),0 12px 28px rgba(18,23,27,.07);
+  --shadow-l:0 4px 10px rgba(18,23,27,.08),0 24px 56px rgba(18,23,27,.10);
+  --r:14px; --r-s:10px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#12171B; --bg-2:#171D22; --card:#1B2228;
+    --ink:#EAEEEA; --ink-2:#9BA5AD; --ink-3:#6F7A83;
+    --line:#2A333A; --line-2:#232B31;
+    --brand:#D7E3F2; --brand-ink:#12171B;
+    --signal:#F0913A; --signal-soft:#33261A;
+    --ok:#5FB783; --ok-soft:#16281E;
+    --bad:#E47963; --bad-soft:#2B1A17;
+    --shadow-s:0 1px 2px rgba(0,0,0,.5);
+    --shadow-m:0 2px 4px rgba(0,0,0,.45),0 12px 28px rgba(0,0,0,.4);
+    --shadow-l:0 4px 10px rgba(0,0,0,.5),0 24px 56px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12171B; --bg-2:#171D22; --card:#1B2228;
+  --ink:#EAEEEA; --ink-2:#9BA5AD; --ink-3:#6F7A83;
+  --line:#2A333A; --line-2:#232B31;
+  --brand:#D7E3F2; --brand-ink:#12171B;
+  --signal:#F0913A; --signal-soft:#33261A;
+  --ok:#5FB783; --ok-soft:#16281E;
+  --bad:#E47963; --bad-soft:#2B1A17;
+  --shadow-s:0 1px 2px rgba(0,0,0,.5);
+  --shadow-m:0 2px 4px rgba(0,0,0,.45),0 12px 28px rgba(0,0,0,.4);
+  --shadow-l:0 4px 10px rgba(0,0,0,.5),0 24px 56px rgba(0,0,0,.45);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:Onest,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+button,input,select{font:inherit;color:inherit}
+a{color:var(--signal)}
+:focus-visible{outline:3px solid var(--signal);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;
+    scroll-behavior:auto!important}
+}
+
+.wrap{width:100%;max-width:560px;margin:0 auto;padding:0 16px}
+@media (min-width:900px){.wrap{max-width:1080px;padding:0 32px}}
+
+/* ── шапка ─────────────────────────────────────────────────────────── */
+header{
+  position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:saturate(160%) blur(12px);border-bottom:1px solid var(--line-2);
+}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:56px;padding:8px 0}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.01em}
+.logo i{width:26px;height:26px;flex:none;border-radius:6px;background:var(--brand);
+  display:grid;place-items:center;font-style:normal}
+.logo i::before{content:"";width:14px;height:14px;border:1.6px solid var(--brand-ink);
+  border-top-width:0;border-bottom-width:0;
+  background:
+    linear-gradient(var(--brand-ink),var(--brand-ink)) 0 0/100% 1.8px no-repeat,
+    linear-gradient(var(--brand-ink),var(--brand-ink)) 0 6.1px/100% 1.8px no-repeat,
+    linear-gradient(var(--brand-ink),var(--brand-ink)) 0 12.2px/100% 1.8px no-repeat;
+}
+.hdr-note{font-size:12.5px;color:var(--ink-2);text-align:right;line-height:1.3}
+@media (max-width:400px){.hdr-note{display:none}}
+
+/* ── типографика ───────────────────────────────────────────────────── */
+h1,h2,h3{font-family:Unbounded,Onest,sans-serif;font-weight:700;
+  letter-spacing:-.02em;line-height:1.14;margin:0;text-wrap:balance}
+h1{font-size:clamp(27px,7.4vw,44px)}
+h2{font-size:clamp(21px,5.6vw,32px)}
+h3{font-size:17px;font-weight:600;letter-spacing:-.01em}
+p{margin:0 0 14px}
+.sub{color:var(--ink-2);font-size:16px}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--signal);margin-bottom:12px}
+.eyebrow::before{content:"";width:20px;height:2px;background:var(--signal)}
+section{padding:44px 0}
+@media (min-width:900px){section{padding:72px 0}}
+.sec-head{margin-bottom:20px}
+.sec-head p{max-width:62ch}
+@media (min-width:900px){.sec-head{max-width:66ch}}
+
+/* ── кнопки: тач-цель не меньше 48px (WCAG 2.2) ────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:52px;padding:14px 22px;border-radius:var(--r-s);border:1.5px solid transparent;
+  font-weight:600;font-size:16px;text-decoration:none;cursor:pointer;
+  transition:transform .12s ease,box-shadow .18s ease,background .18s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--signal);color:#fff;box-shadow:var(--shadow-m)}
+.btn-primary:hover{box-shadow:var(--shadow-l)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn-ghost:hover{background:var(--bg-2)}
+.btn-block{width:100%}
+
+/* ── карточки ──────────────────────────────────────────────────────── */
+.card{background:var(--card);border:1px solid var(--line-2);border-radius:var(--r);
+  padding:18px;box-shadow:var(--shadow-s)}
+.card-lg{padding:20px;box-shadow:var(--shadow-m)}
+@media (min-width:900px){.card{padding:24px}.card-lg{padding:28px}}
+
+/* ── герой ─────────────────────────────────────────────────────────── */
+.hero{padding-top:26px;padding-bottom:8px}
+@media (min-width:900px){
+  .hero{padding-top:56px;padding-bottom:24px}
+  .hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,480px);
+    gap:56px;align-items:start}
+  .hero-copy{position:sticky;top:96px}
+  .hero h1{font-size:clamp(38px,3.6vw,52px)}
+  .hero .lead{font-size:18px;max-width:30ch}
+  .calc{margin-top:0}
+}
+/* Длинный слайдер неудобен даже мышью: ограничиваем ход в широких карточках */
+@media (min-width:900px){
+  .card-lg input[type=range]{max-width:420px}
+  .card-lg .seg{max-width:420px}
+  .card-lg .grid2{max-width:520px}
+}
+.hero h1{margin-bottom:12px}
+.hero .lead{font-size:17px;color:var(--ink-2);max-width:34ch;margin-bottom:20px}
+.deadline{display:inline-flex;align-items:center;gap:8px;background:var(--signal-soft);
+  color:var(--signal);border-radius:100px;padding:7px 14px;font-size:13.5px;font-weight:600;
+  margin-bottom:16px}
+.deadline b{font-variant-numeric:tabular-nums}
+
+/* ── калькулятор ───────────────────────────────────────────────────── */
+.calc{margin-top:6px}
+.field{margin-bottom:20px}
+.field:last-of-type{margin-bottom:8px}
+.field-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px}
+.field label,.grouplabel{font-weight:600;font-size:15px}
+.field .val{font-family:Unbounded,sans-serif;font-weight:600;font-size:17px;
+  font-variant-numeric:tabular-nums;color:var(--signal);white-space:nowrap}
+.field .hint{font-size:12.5px;color:var(--ink-3);margin-top:7px;line-height:1.4}
+
+input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:44px;background:transparent;
+  margin:0;display:block;cursor:pointer;
+}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:100px;background:var(--line)}
+input[type=range]::-moz-range-track{height:6px;border-radius:100px;background:var(--line)}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:30px;height:30px;border-radius:50%;
+  background:var(--signal);border:3px solid var(--card);box-shadow:var(--shadow-m);
+  margin-top:-12px;transition:transform .12s ease}
+input[type=range]::-moz-range-thumb{width:30px;height:30px;border-radius:50%;
+  background:var(--signal);border:3px solid var(--card);box-shadow:var(--shadow-m)}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.12)}
+
+.seg{display:flex;gap:6px;background:var(--bg-2);padding:4px;border-radius:var(--r-s)}
+.seg button{flex:1;min-height:44px;border:none;background:transparent;border-radius:7px;
+  font-weight:600;font-size:14.5px;color:var(--ink-2);cursor:pointer;transition:.15s}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow-s)}
+
+/* ── результат ─────────────────────────────────────────────────────── */
+.result{background:var(--brand);color:var(--brand-ink);border-radius:var(--r);
+  padding:22px 20px;margin-top:18px;box-shadow:var(--shadow-l);position:relative;overflow:hidden}
+.result::after{content:"";position:absolute;right:-60px;top:-70px;width:210px;height:210px;
+  border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,color-mix(in srgb,var(--signal) 30%,transparent) 0%,
+    color-mix(in srgb,var(--signal) 6%,transparent) 55%,transparent 72%)}
+.result .cap{font-size:13px;opacity:.78;margin-bottom:4px;position:relative}
+.result .big{font-family:Unbounded,sans-serif;font-weight:700;
+  font-size:clamp(34px,10vw,52px);line-height:1.03;font-variant-numeric:tabular-nums;
+  position:relative;letter-spacing:-.03em}
+.result .big small{font-size:.44em;font-weight:600;opacity:.72;letter-spacing:0}
+.result-rows{display:grid;gap:1px;background:color-mix(in srgb,var(--brand-ink) 16%,transparent);
+  margin-top:18px;border-radius:9px;overflow:hidden;position:relative}
+.result-rows div{background:var(--brand);display:flex;justify-content:space-between;gap:10px;
+  padding:10px 13px;font-size:14px}
+.result-rows span:last-child{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.payback{display:flex;align-items:center;gap:10px;margin-top:16px;padding:13px 15px;
+  background:var(--ok-soft);border-radius:var(--r-s);font-size:14.5px;position:relative}
+.payback b{font-variant-numeric:tabular-nums;color:var(--ok);white-space:nowrap}
+.payback span{line-height:1.35}
+
+/* ── проверка стеллажа ─────────────────────────────────────────────── */
+.grid2{display:grid;gap:12px}
+@media (min-width:640px){.grid2{grid-template-columns:1fr 1fr}}
+.selectwrap{position:relative}
+select{width:100%;min-height:52px;padding:13px 40px 13px 14px;border-radius:var(--r-s);
+  border:1.5px solid var(--line);background:var(--card);appearance:none;font-weight:500;cursor:pointer}
+.selectwrap::after{content:"";position:absolute;right:16px;top:50%;width:8px;height:8px;
+  border-right:2px solid var(--ink-2);border-bottom:2px solid var(--ink-2);
+  transform:translateY(-70%) rotate(45deg);pointer-events:none}
+
+.verdict{margin-top:16px;border-radius:var(--r);padding:18px;border:1.5px solid}
+.verdict.pass{background:var(--ok-soft);border-color:var(--ok)}
+.verdict.fail{background:var(--bad-soft);border-color:var(--bad)}
+.verdict .v-top{display:flex;align-items:center;gap:11px;margin-bottom:9px}
+.verdict .v-ico{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;
+  font-weight:700;color:#fff;font-size:18px}
+.verdict.pass .v-ico{background:var(--ok)}
+.verdict.fail .v-ico{background:var(--bad)}
+.verdict .v-title{font-family:Unbounded,sans-serif;font-weight:600;font-size:17px;line-height:1.2}
+.verdict .v-num{font-variant-numeric:tabular-nums}
+.verdict p{font-size:14.5px;margin:0;color:var(--ink)}
+.verdict .why{margin-top:11px;padding-top:11px;border-top:1px solid color-mix(in srgb,var(--ink) 12%,transparent);
+  font-size:13.5px;color:var(--ink-2)}
+
+/* ── факты, шаги, faq ──────────────────────────────────────────────── */
+.facts{display:grid;gap:11px}
+@media (min-width:640px){.facts{grid-template-columns:repeat(3,1fr)}}
+.fact{background:var(--card);border:1px solid var(--line-2);border-radius:var(--r);padding:16px}
+.fact b{display:block;font-family:Unbounded,sans-serif;font-size:25px;font-weight:700;
+  line-height:1.05;margin-bottom:5px;font-variant-numeric:tabular-nums}
+.fact span{font-size:13.5px;color:var(--ink-2);line-height:1.4;display:block}
+
+.kit{display:grid;gap:10px;margin:18px 0}
+.kit li{display:flex;gap:11px;align-items:flex-start;background:var(--card);
+  border:1px solid var(--line-2);border-radius:var(--r-s);padding:13px 15px;font-size:15px}
+.kit li::before{content:"";width:20px;height:20px;flex:none;margin-top:1px;border-radius:50%;
+  background:var(--ok-soft);border:1.5px solid var(--ok);position:relative}
+.kit li i{position:absolute;width:0;height:0}
+.kit{list-style:none;padding:0;margin-left:0}
+.kit li b{font-weight:600}
+.kit li em{font-style:normal;color:var(--ink-2);font-size:13.5px;display:block;margin-top:2px}
+
+details{background:var(--card);border:1px solid var(--line-2);border-radius:var(--r-s);
+  margin-bottom:9px;overflow:hidden}
+details summary{padding:15px 44px 15px 16px;font-weight:600;font-size:15.5px;cursor:pointer;
+  list-style:none;position:relative;min-height:52px;display:flex;align-items:center}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"";position:absolute;right:18px;top:50%;width:9px;height:9px;
+  border-right:2px solid var(--ink-2);border-bottom:2px solid var(--ink-2);
+  transform:translateY(-70%) rotate(45deg);transition:transform .2s}
+details[open] summary::after{transform:translateY(-30%) rotate(-135deg)}
+details .body{padding:0 16px 16px;font-size:14.5px;color:var(--ink-2)}
+details .body p:last-child{margin-bottom:0}
+
+/* ── форма ─────────────────────────────────────────────────────────── */
+.form label{display:block;font-weight:600;font-size:14.5px;margin-bottom:7px}
+.form input[type=text],.form input[type=tel]{width:100%;min-height:52px;padding:13px 15px;
+  border-radius:var(--r-s);border:1.5px solid var(--line);background:var(--card)}
+.form input:focus{border-color:var(--signal)}
+.form .field{margin-bottom:15px}
+.form .note{font-size:12.5px;color:var(--ink-3);margin-top:10px;line-height:1.45}
+.sent{background:var(--ok-soft);border:1.5px solid var(--ok);border-radius:var(--r);
+  padding:18px;font-size:15px}
+
+/* ── липкая кнопка ─────────────────────────────────────────────────── */
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line-2);transform:translateY(110%);transition:transform .25s ease}
+.sticky.on{transform:translateY(0)}
+.sticky .inner{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.sticky .sum{flex:1;min-width:0;font-size:12.5px;color:var(--ink-2);line-height:1.25}
+.sticky .sum b{display:block;font-family:Unbounded,sans-serif;font-size:16px;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.sticky .btn{flex:none;padding:13px 18px;min-height:48px}
+@media (min-width:900px){.sticky{display:none}}
+body{padding-bottom:0}
+body.has-sticky{padding-bottom:84px}
+
+footer{padding:28px 0 40px;border-top:1px solid var(--line-2);color:var(--ink-3);font-size:13px}
+footer p{margin-bottom:8px}
+.tiny{font-size:12.5px;color:var(--ink-3);line-height:1.45}
+
+/* Появление секций — прогрессивное улучшение, а не условие видимости.
+   Прячем ТОЛЬКО если скрипт уже отметил документ и умеет показать обратно:
+   иначе при любой осечке страница остаётся пустой, что для лендинга смертельно. */
+.js .rise{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.js .rise.seen{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.js .rise{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hdr">
+    <div class="logo"><i></i>Склад в ПВЗ</div>
+    <div class="hdr-note">Расчёт по ГОСТ Р 55525-2017<br>и тарифам Ozon</div>
+  </div>
+</header>
+
+<main>
+
+<!-- ГЕРОЙ + КАЛЬКУЛЯТОР -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <div class="deadline">Программа стартовала <b>10 сентября</b></div>
+      <h1>Сколько пункт заработает на хранении</h1>
+      <p class="lead">Ozon платит за размещение и обработку. Посчитайте свою сумму —
+      полминуты, без регистрации.</p>
+    </div>
+
+    <div class="card card-lg calc">
+      <div class="field">
+        <div class="field-top">
+          <label for="racks">Стеллажей под товары продавцов</label>
+          <span class="val" id="racksVal">2</span>
+        </div>
+        <input type="range" id="racks" min="1" max="8" step="1" value="2"
+               aria-describedby="racksHint">
+        <div class="hint" id="racksHint">Ozon разрешает ставить несколько. Доход растёт
+        почти линейно: каждый стеллаж добавляет свою ёмкость.</div>
+      </div>
+
+      <div class="field">
+        <div class="field-top">
+          <label for="fill">Насколько заполнены ячейки</label>
+          <span class="val" id="fillVal">60 %</span>
+        </div>
+        <input type="range" id="fill" min="10" max="100" step="5" value="60"
+               aria-describedby="fillHint">
+        <div class="hint" id="fillHint">Оплата за размещение считается по литрам занятого
+        объёма — 0,2 ₽ за литр в день.</div>
+      </div>
+
+      <div class="field">
+        <div class="field-top">
+          <label for="returns">Отказов и отмен в месяц</label>
+          <span class="val" id="returnsVal">150</span>
+        </div>
+        <input type="range" id="returns" min="0" max="700" step="10" value="150"
+               aria-describedby="retHint">
+        <div class="hint" id="retHint">За каждый — 15 ₽ за обработку, 5 ₽ за перемещение
+        на ячейку и 5 ₽ за подготовку к отправке.</div>
+      </div>
+
+      <div class="field">
+        <div class="field-top">
+          <span class="grouplabel" id="wLbl">Ширина стеллажа</span>
+        </div>
+        <div class="seg" role="group" aria-labelledby="wLbl">
+          <button type="button" data-w="100" aria-pressed="false">100 см</button>
+          <button type="button" data-w="120" aria-pressed="true">120 см — 24 ячейки</button>
+        </div>
+      </div>
+
+      <div class="result" aria-live="polite">
+        <div class="cap">Доход пункта в месяц</div>
+        <div class="big" id="total">—</div>
+        <div class="result-rows">
+          <div><span>За размещение товара</span><span id="rPlace">—</span></div>
+          <div><span>За обработку операций</span><span id="rOps">—</span></div>
+          <div><span>Ёмкость и ячейки</span><span id="rCap">—</span></div>
+          <div><span>За год</span><span id="rYear">—</span></div>
+        </div>
+        <div class="payback">
+          <span id="paybackText">Окупаемость комплекта: <b>—</b></span>
+        </div>
+      </div>
+
+      <a href="#zayavka" class="btn btn-primary btn-block" style="margin-top:16px">
+        Получить цену комплекта</a>
+      <p class="tiny" style="margin-top:11px;margin-bottom:0">Тарифы взяты из условий
+      программы Ozon: 15 ₽ за возврат, 5 ₽ за перемещение, 5 ₽ за подготовку,
+      0,2 ₽ за литр в день.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ЧТО ПРОИЗОШЛО -->
+<section class="rise">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Что изменилось</div>
+      <h2>Пункты выдачи стали мини-складами</h2>
+      <p class="sub">Ozon подключает к хранению товаров продавцов более 80 тысяч пунктов.
+      С 10 сентября в пунктах остаются отказы и отмены, с середины октября продавцы везут
+      туда поставки напрямую.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><b>80 000+</b><span>пунктов участвуют в программе</span></div>
+      <div class="fact"><b>120 кг</b><span>требование к нагрузке на полку</span></div>
+      <div class="fact"><b>5 полок</b><span>высота 200, глубина 40 см</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ПРОВЕРКА СТЕЛЛАЖА -->
+<section class="rise">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Проверка за 10 секунд</div>
+      <h2>Выдержит ли ваш стеллаж 120 кг</h2>
+      <p class="sub">Большинство стеллажей, которые стоят в пунктах сегодня, рассчитаны
+      на 30–100 кг. Расчёт ниже — по ГОСТ Р 55525-2017, с проверкой прочности, прогиба и
+      местной устойчивости полки. Посмотрите на торец своей полки и введите размеры.</p>
+    </div>
+
+    <div class="card card-lg">
+      <div class="field">
+        <div class="field-top">
+          <label for="cw">Ширина полки</label>
+          <span class="val" id="cwVal">120 см</span>
+        </div>
+        <input type="range" id="cw" min="80" max="150" step="5" value="120">
+      </div>
+
+      <div class="grid2">
+        <div class="field">
+          <label for="ct">Толщина металла полки</label>
+          <div class="selectwrap">
+            <select id="ct">
+              <option value="0.5">0,5 мм</option>
+              <option value="0.6" selected>0,6 мм</option>
+              <option value="0.7">0,7 мм</option>
+              <option value="0.8">0,8 мм</option>
+              <option value="1.0">1,0 мм</option>
+              <option value="1.2">1,2 мм</option>
+            </select>
+          </div>
+          <div class="hint">Если не знаете — 0,6 мм у большинства лёгких серий.</div>
+        </div>
+        <div class="field">
+          <label for="cb">Высота бортика полки</label>
+          <div class="selectwrap">
+            <select id="cb">
+              <option value="20">20 мм</option>
+              <option value="30" selected>30 мм</option>
+              <option value="40">40 мм</option>
+              <option value="50">50 мм</option>
+              <option value="60">60 мм</option>
+            </select>
+          </div>
+          <div class="hint">Загнутый вниз край по длинной стороне.</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-top"><span class="grouplabel" id="lipLbl">Край бортика загнут внутрь ещё раз?</span></div>
+        <div class="seg" role="group" aria-labelledby="lipLbl">
+          <button type="button" data-lip="0" aria-pressed="true">Нет, просто загиб</button>
+          <button type="button" data-lip="12" aria-pressed="false">Да, двойной подгиб</button>
+        </div>
+        <div class="hint">Это решает больше, чем толщина металла: двойной подгиб может
+        поднять несущую способность втрое.</div>
+      </div>
+
+      <div class="verdict fail" id="verdict" aria-live="polite">
+        <div class="v-top">
+          <div class="v-ico" id="vIco">!</div>
+          <div class="v-title" id="vTitle">—</div>
+        </div>
+        <p id="vText">—</p>
+        <div class="why" id="vWhy">—</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- КОМПЛЕКТ -->
+<section class="rise">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Что нужно купить</div>
+      <h2>Комплект под требования программы</h2>
+      <p class="sub">Не просто стеллаж, а всё, без чего пункт не примет товар на хранение.</p>
+    </div>
+    <ul class="kit">
+      <li><div><b>Стеллаж 200 × 120 × 40 см, 120 кг на полку</b>
+        <em>Расчёт по ГОСТ: прочность, прогиб и местная устойчивость полки</em></div></li>
+      <li><div><b>24 коробки-ячейки 40 × 28 × 34 см</b>
+        <em>Ровно тот размер, под который считается оплата за литры</em></div></li>
+      <li><div><b>Крепление к стене с анкером</b>
+        <em>Стеллаж 200 см при глубине 40 см — это 5:1, без крепления его не ставят</em></div></li>
+      <li><div><b>Наклейки маркировки ячеек</b>
+        <em>Чтобы ячейки читались на записи облачной камеры</em></div></li>
+      <li><div><b>Паспорт и табличка грузоподъёмности</b>
+        <em>Требование ГОСТ: формат не меньше А4, с нагрузкой на каждый ярус</em></div></li>
+      <li><div><b>Схема размещения под камеру</b>
+        <em>Стеллаж должен стоять отдельно и попадать в кадр</em></div></li>
+    </ul>
+    <a href="#zayavka" class="btn btn-primary btn-block">Узнать цену и сроки</a>
+  </div>
+</section>
+
+<!-- ПОЧЕМУ МЫ -->
+<section class="rise">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Чем отличаемся</div>
+      <h2>Мы считаем, а не пересказываем паспорт</h2>
+    </div>
+    <div class="facts" style="grid-template-columns:1fr">
+      <div class="fact"><b>Два норматива</b><span>Изделие проверяется и по ГОСТ Р 55525-2017
+        для стеллажей, и по ТР ТС 025/2012 — по нему обязательна декларация. Требование
+        Ozon в 1,7 раза жёстче регламента, и это надо считать, а не обещать.</span></div>
+      <div class="fact"><b>Честная нагрузка</b><span>В карточках часто пишут «120 кг на полку»
+        и рядом «450 кг на стеллаж» при пяти полках. Пять по сто двадцать — шестьсот.
+        Мы говорим, сколько выдержит секция целиком.</span></div>
+      <div class="fact"><b>Расчёт вашего дохода</b><span>Перед покупкой вы видите, за сколько
+        комплект окупится именно у вас — по вашему потоку и вашей загрузке.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ЗАЯВКА -->
+<section class="rise" id="zayavka">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Заявка</div>
+      <h2>Пришлём цену и сроки поставки</h2>
+      <p class="sub">Ответим в течение рабочего дня. К ответу приложим расчёт под ваш пункт —
+      с вашими цифрами из калькулятора.</p>
+    </div>
+    <form class="card card-lg form" id="leadForm" novalidate>
+      <div class="field">
+        <label for="fCity">Город</label>
+        <input type="text" id="fCity" name="city" autocomplete="address-level2"
+               placeholder="Например, Самара" required>
+      </div>
+      <div class="field">
+        <label for="fContact">Телефон или ник в Telegram</label>
+        <input type="tel" id="fContact" name="contact" autocomplete="tel"
+               placeholder="+7 … или @nickname" required>
+      </div>
+      <div class="field">
+        <label for="fCount">Сколько комплектов нужно</label>
+        <div class="selectwrap">
+          <select id="fCount" name="count">
+            <option>1</option><option selected>2</option><option>3</option>
+            <option>4–5</option><option>6–10</option><option>больше 10</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Отправить заявку</button>
+      <p class="note">Нажимая кнопку, вы соглашаетесь на обработку указанных данных для
+      ответа на заявку. Рассылок не будет.</p>
+    </form>
+    <div class="card card-lg sent" id="sentBox" hidden>
+      <b>Заявка собрана.</b>
+      <p style="margin:9px 0 14px">Отправьте её одним нажатием — откроется Telegram с уже
+      готовым текстом. Если он не установлен, скопируйте текст и пришлите удобным способом.</p>
+      <a class="btn btn-primary btn-block" id="tgLink" href="#" style="margin-bottom:10px">
+        Открыть Telegram с заявкой</a>
+      <button class="btn btn-ghost btn-block" id="copyBtn" type="button">Скопировать текст</button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="rise">
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Вопросы</div><h2>Коротко о главном</h2></div>
+
+    <details>
+      <summary>Обязательно ли участвовать в программе</summary>
+      <div class="body"><p>Участие добровольное, но доход за размещение и обработку получают
+      только те пункты, которые подключились и оборудовали место хранения по требованиям.</p></div>
+    </details>
+    <details>
+      <summary>Подойдёт ли стеллаж, который уже стоит</summary>
+      <div class="body"><p>Проверьте его в расчёте выше. Стеллажи для посылок обычно
+      рассчитаны на 30–100 кг на полку, а программа требует 120 кг. Дело чаще не в толщине
+      металла, а в том, как загнут край полки.</p></div>
+    </details>
+    <details>
+      <summary>Почему стеллаж нужно крепить к стене</summary>
+      <div class="body"><p>Высота 200 см при глубине 40 см — отношение 5:1. По
+      ГОСТ Р 55525-2017 отсутствие крепления допускается только при прямом указании
+      изготовителя. Кронштейн с анкером входит в комплект.</p></div>
+    </details>
+    <details>
+      <summary>Сколько стеллажей поставить</summary>
+      <div class="body"><p>Столько, сколько поместится в свободной зоне: оплата за
+      размещение считается по литрам, поэтому доход растёт вместе с ёмкостью. На один
+      стеллаж шириной 120 см нужно около 1,2 м² с учётом подхода к полкам.</p></div>
+    </details>
+    <details>
+      <summary>Откуда цифры в калькуляторе</summary>
+      <div class="body"><p>Тарифы — из условий программы Ozon: 15 ₽ за обработку возврата,
+      5 ₽ за перемещение на ячейку, 5 ₽ за подготовку к отправке, 0,2 ₽ за литр товара
+      в день. Ёмкость считается по коробке 40 × 28 × 34 см. Прочность полки — по
+      ГОСТ Р 55525-2017.</p></div>
+    </details>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b style="color:var(--ink)">Склад в ПВЗ</b> — комплекты для хранения товаров
+    продавцов в пунктах выдачи.</p>
+    <p class="tiny">Калькулятор носит справочный характер: фактический доход зависит от
+    потока вашего пункта и условий вашего договора с площадкой. Расчёт несущей способности
+    выполняется по ГОСТ Р 55525-2017 и показывает результат для введённых вами размеров —
+    он не заменяет паспорт конкретного изделия.</p>
+  </div>
+</footer>
+
+<div class="sticky" id="sticky">
+  <div class="inner">
+    <div class="sum">Ваш доход в месяц<b id="stickySum">—</b></div>
+    <a href="#zayavka" class="btn btn-primary">Узнать цену</a>
+  </div>
+</div>
+
+<script src="calc.js"></script>
+<script>
+(function(){
+  'use strict';
+  var KIT_PRICE = 12900;          // цена комплекта с НДС, ₽
+  var TG_USER = 'seminyuri';      // ← заменить на рабочий аккаунт приёма заявок
+
+  var $ = function(id){ return document.getElementById(id); };
+  var fmt = function(n){ return Math.round(n).toLocaleString('ru-RU'); };
+
+  /* ── калькулятор дохода ─────────────────────────────────────────── */
+  var state = { racks:2, fill:60, returns:150, width:120, levels:6 };
+
+  function plural(n, one, few, many){
+    var m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return one;
+    if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return few;
+    return many;
+  }
+
+  function recalc(){
+    var r = pvzIncome({ racks:state.racks, widthCm:state.width, levels:state.levels,
+                        fill:state.fill/100, returnsPerMonth:state.returns });
+    $('total').innerHTML = fmt(r.total) + ' <small>₽</small>';
+    $('rPlace').textContent = fmt(r.placement) + ' ₽';
+    $('rOps').textContent = fmt(r.operations) + ' ₽';
+    $('rCap').textContent = fmt(r.capacity) + ' л · ' + r.boxes + ' ' +
+        plural(r.boxes,'ячейка','ячейки','ячеек');
+    $('rYear').textContent = fmt(r.total * 12) + ' ₽';
+
+    var invest = KIT_PRICE * state.racks;
+    if (r.total > 0){
+      var months = invest / r.total;
+      var txt;
+      if (months < 1) txt = 'меньше месяца';
+      else {
+        var rounded = Math.round(months * 10) / 10;
+        txt = String(rounded).replace('.', ',') + ' ' +
+              plural(Math.round(rounded), 'месяц', 'месяца', 'месяцев');
+      }
+      $('paybackText').innerHTML = 'Окупаемость ' + state.racks + ' ' +
+        plural(state.racks,'комплекта','комплектов','комплектов') + ': <b>' + txt + '</b>';
+    } else {
+      $('paybackText').innerHTML = 'Окупаемость: <b>—</b>';
+    }
+    $('stickySum').textContent = fmt(r.total) + ' ₽';
+    window.__lead = { income: Math.round(r.total), racks: state.racks,
+                      width: state.width, fill: state.fill, returns: state.returns };
+  }
+
+  function bindRange(id, key, render){
+    var el = $(id);
+    el.addEventListener('input', function(){
+      state[key] = +el.value; render(); recalc();
+    });
+  }
+  bindRange('racks','racks', function(){ $('racksVal').textContent = state.racks; });
+  bindRange('fill','fill', function(){ $('fillVal').textContent = state.fill + ' %'; });
+  bindRange('returns','returns', function(){ $('returnsVal').textContent = state.returns; });
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-w]'), function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('[data-w]'), function(x){
+        x.setAttribute('aria-pressed', String(x === b));
+      });
+      state.width = +b.dataset.w; recalc();
+    });
+  });
+  recalc();
+
+  /* ── проверка стеллажа ──────────────────────────────────────────── */
+  var chk = { w:120, t:0.6, b:30, lip:0 };
+  function recheck(){
+    var span = chk.w * 10 - 40;            // пролёт между стойками, мм
+    var held = maxLoadKg(span, 400, chk.t, chk.b, '08пс', 0, chk.lip);
+    var box = $('verdict'), ok = held >= 120;
+    box.className = 'verdict ' + (ok ? 'pass' : 'fail');
+    $('vIco').textContent = ok ? '✓' : '!';
+    $('vTitle').innerHTML = ok
+      ? 'Выдержит: <span class="v-num">' + held + ' кг</span> на полку'
+      : 'Не выдержит: только <span class="v-num">' + held + ' кг</span> из 120';
+    $('vText').textContent = ok
+      ? 'Такая полка проходит требование программы с запасом ' +
+        String(Math.round(held / 120 * 10) / 10).replace('.', ',') + '× по прочности и прогибу.'
+      : 'До требования не хватает ' + (120 - held) + ' кг. Под полной загрузкой полка ' +
+        'прогнётся сильнее допустимого, а при перегрузе потеряет форму безвозвратно.';
+    $('vWhy').textContent = chk.lip
+      ? 'Считано с двойным подгибом края: он работает как ребро жёсткости и даёт основной запас.'
+      : 'Считано без двойного подгиба. Если край полки загнут внутрь ещё раз — переключите ' +
+        'кнопку выше, результат заметно изменится.';
+    window.__check = { w:chk.w, t:chk.t, b:chk.b, lip:chk.lip, held:held };
+  }
+  $('cw').addEventListener('input', function(){
+    chk.w = +this.value; $('cwVal').textContent = chk.w + ' см'; recheck();
+  });
+  $('ct').addEventListener('change', function(){ chk.t = +this.value; recheck(); });
+  $('cb').addEventListener('change', function(){ chk.b = +this.value; recheck(); });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-lip]'), function(b){
+    b.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('[data-lip]'), function(x){
+        x.setAttribute('aria-pressed', String(x === b));
+      });
+      chk.lip = +b.dataset.lip; recheck();
+    });
+  });
+  recheck();
+
+  /* ── заявка ─────────────────────────────────────────────────────── */
+  var form = $('leadForm');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var city = $('fCity').value.trim(), contact = $('fContact').value.trim();
+    if (!city || !contact){
+      (!city ? $('fCity') : $('fContact')).focus();
+      return;
+    }
+    var l = window.__lead || {}, c = window.__check || {};
+    var text =
+      'Заявка на комплект для хранения в ПВЗ\n' +
+      'Город: ' + city + '\n' +
+      'Контакт: ' + contact + '\n' +
+      'Комплектов: ' + $('fCount').value + '\n' +
+      '— расчёт с сайта —\n' +
+      'Стеллажей: ' + l.racks + ' по ' + l.width + ' см, заполнение ' + l.fill + ' %, ' +
+      'отказов ' + l.returns + '/мес\n' +
+      'Доход по калькулятору: ' + fmt(l.income) + ' ₽/мес\n' +
+      'Свой стеллаж: полка ' + c.t + ' мм, борт ' + c.b + ' мм' +
+      (c.lip ? ', двойной подгиб' : ', без подгиба') + ' → держит ' + c.held + ' кг';
+    window.__leadText = text;
+    $('tgLink').href = 'https://t.me/' + TG_USER + '?text=' + encodeURIComponent(text);
+    form.hidden = true;
+    $('sentBox').hidden = false;
+    $('sentBox').scrollIntoView({ behavior:'smooth', block:'center' });
+  });
+
+  $('copyBtn').addEventListener('click', function(){
+    var t = window.__leadText || '';
+    var done = function(){ $('copyBtn').textContent = 'Текст скопирован'; };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(done, fallback);
+    } else fallback();
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch(e){}
+      document.body.removeChild(ta);
+    }
+  });
+
+  /* ── липкая кнопка и появление секций ───────────────────────────── */
+  var sticky = $('sticky'), hero = document.querySelector('.hero');
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(en){
+      var show = !en[0].isIntersecting;
+      sticky.classList.toggle('on', show);
+      document.body.classList.toggle('has-sticky', show);
+    }, { threshold:0 }).observe(hero);
+
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add('seen'); io.unobserve(e.target); }
+      });
+    }, { threshold:0.08 });
+    Array.prototype.forEach.call(document.querySelectorAll('.rise'), function(s){ io.observe(s); });
+  } else {
+    showAll();
+  }
+  /* Последний рубеж: если observer по любой причине не отработал, через две с
+     половиной секунды показываем всё принудительно. Пустой лендинг хуже
+     лендинга без анимации. */
+  setTimeout(showAll, 2500);
+  window.addEventListener('load', function(){ setTimeout(showAll, 400); });
+  function showAll(){
+    Array.prototype.forEach.call(document.querySelectorAll('.rise'), function(s){
+      s.classList.add('seen');
+    });
+  }
+})();
+</script>
+</body>
+</html>
