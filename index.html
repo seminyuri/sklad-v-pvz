@@ -143,16 +143,96 @@ section{padding:44px 0}
 .card-lg{padding:20px;box-shadow:var(--shadow-m)}
 @media (min-width:900px){.card{padding:24px}.card-lg{padding:28px}}
 
-/* ── герой ─────────────────────────────────────────────────────────── */
-.hero{padding-top:26px;padding-bottom:8px}
+
+/* ═══ ПЕРВЫЙ ЭКРАН — «ПУЛЬТ» ═══════════════════════════════════════════
+   Тёмная плотная панель вместо длинных слайдеров: человек видит свой
+   стеллаж и сумму одновременно, без прокрутки. Ниже страница светлая —
+   контраст задаёт ритм и отделяет инструмент от рассказа. */
+.hero{
+  background:#101519;color:#EDF1EE;padding:18px 0 30px;position:relative;overflow:hidden;
+  border-bottom:1px solid #1E262C;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(#FFFFFF0A 1px,transparent 1px),
+                   linear-gradient(90deg,#FFFFFF0A 1px,transparent 1px);
+  background-size:34px 34px;
+  mask-image:radial-gradient(ellipse 80% 60% at 60% 0%,#000 40%,transparent 100%);
+}
+.hero .wrap{position:relative}
+.hero .eyebrow-hero{color:#F0913A;margin-bottom:10px}
+.hero .eyebrow-hero::before{background:#F0913A}
+.hero h1{font-size:clamp(28px,8vw,42px);line-height:1.06;color:#fff;margin-bottom:10px}
+.hero h1 .hl{color:#F0913A}
+.hero .lead{color:#98A5AE;font-size:14.5px;margin-bottom:14px;max-width:32ch}
+
+.panel{background:#161C21;border:1px solid #232C33;border-radius:16px;padding:14px;
+  box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.panel-top{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;
+  margin-bottom:10px}
+
+/* схема стеллажа: ячейки заполняются по мере роста загрузки */
+.rack{flex:none;width:96px}
+.rack svg{display:block;width:100%;height:auto}
+.rack .cellOn{fill:#F0913A}
+.rack .cellOff{fill:#222B32}
+.rack .frame{stroke:#4A575F;stroke-width:2.4;fill:none;stroke-linecap:round}
+.rack .shelf{stroke:#39454C;stroke-width:2}
+
+.panel-num{min-width:0}
+.pn-cap{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#7E8B94;margin-bottom:2px}
+.pn-big{font-family:Unbounded,sans-serif;font-weight:700;font-size:clamp(30px,8.6vw,42px);
+  line-height:1;letter-spacing:-.03em;color:#fff;font-variant-numeric:tabular-nums}
+.pn-big small{font-size:.42em;font-weight:600;color:#98A5AE;letter-spacing:0}
+.pn-sub{font-size:12.5px;color:#98A5AE;margin-top:6px;font-variant-numeric:tabular-nums}
+.pn-pay{font-size:12.5px;color:#7BC79A;margin-top:3px;font-variant-numeric:tabular-nums}
+
+/* компактные контролы: одна строка на параметр */
+.ctl{display:grid;gap:2px;padding:6px 0;border-top:1px solid #232C33;border-bottom:1px solid #232C33}
+.ctl-row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
+  min-height:44px}
+.ctl-row label,.ctl-row .grouplabel{font-size:13.5px;color:#AFBAC2;font-weight:500;white-space:nowrap}
+.ctl-row output{font-family:Unbounded,sans-serif;font-weight:600;font-size:15px;color:#F0913A;
+  font-variant-numeric:tabular-nums;text-align:right;min-width:52px}
+.ctl-row input[type=range]{height:38px}
+.ctl-row input[type=range]::-webkit-slider-runnable-track{background:#2A343B;height:5px}
+.ctl-row input[type=range]::-moz-range-track{background:#2A343B;height:5px}
+.ctl-row input[type=range]::-webkit-slider-thumb{width:26px;height:26px;margin-top:-10.5px;
+  border-color:#161C21}
+.ctl-row input[type=range]::-moz-range-thumb{width:26px;height:26px;border-color:#161C21}
+.sr-range{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.stepper{display:flex;align-items:center;gap:2px;justify-self:end;background:#1D252B;
+  border-radius:9px;padding:3px}
+.stepper button{width:38px;height:38px;border:none;background:transparent;color:#EDF1EE;
+  font-size:20px;line-height:1;border-radius:7px;cursor:pointer}
+.stepper button:hover{background:#2A343B}
+.stepper button:disabled{opacity:.3;cursor:default}
+.stepper output{min-width:26px;text-align:center;font-size:16px;color:#fff}
+
+.panel-split{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#232C33;
+  margin-top:10px;border-radius:10px;overflow:hidden}
+.panel-split div{background:#161C21;padding:9px 10px;text-align:center}
+.panel-split span{display:block;font-weight:600;font-size:14px;color:#EDF1EE;
+  font-variant-numeric:tabular-nums}
+.panel-split i{display:block;font-style:normal;font-size:11px;color:#7E8B94;margin-top:2px}
+
+.panel-note{font-size:11.5px;line-height:1.4;color:#6E7A83;margin:10px 0 0}
+.hero .upsell{background:#1D252B;margin-top:10px;padding:9px 12px}
+.hero .up-txt{font-size:13px}
+.hero .up-txt{color:#AFBAC2}
+.hero .up-txt b{color:#fff}
+.hero .up-btn{border-color:#3A464E;color:#EDF1EE}
+.hero .up-btn:hover{background:#2A343B}
+
 @media (min-width:900px){
-  .hero{padding-top:56px;padding-bottom:24px}
-  .hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,480px);
-    gap:56px;align-items:start}
-  .hero-copy{position:sticky;top:96px}
-  .hero h1{font-size:clamp(38px,3.6vw,52px)}
-  .hero .lead{font-size:18px;max-width:30ch}
-  .calc{margin-top:0}
+  .hero{padding:56px 0 64px}
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:64px;
+    align-items:center}
+  .hero h1{font-size:clamp(40px,4vw,58px)}
+  .hero .lead{font-size:17px}
+  .panel{padding:20px}
+  .rack{width:120px}
 }
 /* Длинный слайдер неудобен даже мышью: ограничиваем ход в широких карточках */
 @media (min-width:900px){
@@ -160,8 +240,6 @@ section{padding:44px 0}
   .card-lg .seg{max-width:420px}
   .card-lg .grid2{max-width:520px}
 }
-.hero h1{margin-bottom:12px}
-.hero .lead{font-size:17px;color:var(--ink-2);max-width:34ch;margin-bottom:20px}
 .deadline{display:inline-flex;align-items:center;gap:8px;background:var(--signal-soft);
   color:var(--signal);border-radius:100px;padding:7px 14px;font-size:13.5px;font-weight:600;
   margin-bottom:16px}
@@ -217,11 +295,23 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.12)}
 .payback{display:flex;align-items:center;gap:10px;margin-top:16px;padding:13px 15px;
   background:var(--ok-soft);border-radius:var(--r-s);font-size:14.5px;position:relative}
 .payback b{font-variant-numeric:tabular-nums;color:var(--ok);white-space:nowrap}
+.upsell{display:flex;align-items:center;gap:12px;margin-top:10px;padding:12px 14px;
+  border-radius:var(--r-s);background:color-mix(in srgb,var(--brand-ink) 9%,transparent);
+  position:relative;flex-wrap:wrap}
+.up-txt{flex:1;min-width:180px;font-size:13.5px;line-height:1.4}
+.up-txt b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.up-btn{flex:none;min-height:40px;padding:9px 15px;border-radius:8px;border:1.5px solid
+  color-mix(in srgb,var(--brand-ink) 34%,transparent);background:transparent;
+  color:inherit;font-weight:600;font-size:13.5px;cursor:pointer}
+.up-btn:hover{background:color-mix(in srgb,var(--brand-ink) 12%,transparent)}
 .payback span{line-height:1.35}
 
 /* ── проверка стеллажа ─────────────────────────────────────────────── */
 .grid2{display:grid;gap:12px}
 @media (min-width:640px){.grid2{grid-template-columns:1fr 1fr}}
+.fit{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+.fit-out{font-size:14px;color:var(--ink-2);line-height:1.45}
+.fit-out b{color:var(--ink);font-variant-numeric:tabular-nums}
 .selectwrap{position:relative}
 select{width:100%;min-height:52px;padding:13px 40px 13px 14px;border-radius:var(--r-s);
   border:1.5px solid var(--line);background:var(--card);appearance:none;font-weight:500;cursor:pointer}
@@ -258,6 +348,15 @@ select{width:100%;min-height:52px;padding:13px 40px 13px 14px;border-radius:var(
   background:var(--ok-soft);border:1.5px solid var(--ok);position:relative}
 .kit li i{position:absolute;width:0;height:0}
 .kit{list-style:none;padding:0;margin-left:0}
+.srcs{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.srcs li{background:var(--card);border:1px solid var(--line-2);border-radius:var(--r);
+  padding:15px 16px}
+.srcs b{display:block;font-size:15.5px;margin-bottom:5px}
+.srcs em{display:block;font-style:normal;font-size:13.5px;color:var(--ink-2);
+  line-height:1.45;margin-bottom:9px}
+.srcs a{display:inline-flex;align-items:center;min-height:44px;font-weight:600;
+  font-size:14px;text-decoration:none}
+.srcs a:hover{text-decoration:underline}
 .kit li b{font-weight:600}
 .kit li em{font-style:normal;color:var(--ink-2);font-size:13.5px;display:block;margin-top:2px}
 
@@ -320,79 +419,96 @@ footer p{margin-bottom:8px}
 
 <main>
 
-<!-- ГЕРОЙ + КАЛЬКУЛЯТОР -->
+<!-- ГЕРОЙ: ПУЛЬТ -->
 <section class="hero">
-  <div class="wrap">
+  <div class="wrap hero-grid">
+
     <div class="hero-copy">
-      <div class="deadline">Программа стартовала <b>10 сентября</b></div>
-      <h1>Сколько пункт заработает на хранении</h1>
-      <p class="lead">Ozon платит за размещение и обработку. Посчитайте свою сумму —
-      полминуты, без регистрации.</p>
+      <div class="eyebrow eyebrow-hero">Программа Ozon · с 10 сентября</div>
+      <h1>Пункт стал складом.<br><span class="hl">Сколько даёт?</span></h1>
+      <p class="lead">Двигайте параметры — сумма считается сразу.</p>
     </div>
 
-    <div class="card card-lg calc">
-      <div class="field">
-        <div class="field-top">
-          <label for="racks">Стеллажей под товары продавцов</label>
-          <span class="val" id="racksVal">2</span>
-        </div>
-        <input type="range" id="racks" min="1" max="8" step="1" value="2"
-               aria-describedby="racksHint">
-        <div class="hint" id="racksHint">Ozon разрешает ставить несколько. Доход растёт
-        почти линейно: каждый стеллаж добавляет свою ёмкость.</div>
-      </div>
-
-      <div class="field">
-        <div class="field-top">
-          <label for="fill">Насколько заполнены ячейки</label>
-          <span class="val" id="fillVal">60 %</span>
-        </div>
-        <input type="range" id="fill" min="10" max="100" step="5" value="60"
-               aria-describedby="fillHint">
-        <div class="hint" id="fillHint">Оплата за размещение считается по литрам занятого
-        объёма — 0,2 ₽ за литр в день.</div>
-      </div>
-
-      <div class="field">
-        <div class="field-top">
-          <label for="returns">Отказов и отмен в месяц</label>
-          <span class="val" id="returnsVal">150</span>
-        </div>
-        <input type="range" id="returns" min="0" max="700" step="10" value="150"
-               aria-describedby="retHint">
-        <div class="hint" id="retHint">За каждый — 15 ₽ за обработку, 5 ₽ за перемещение
-        на ячейку и 5 ₽ за подготовку к отправке.</div>
-      </div>
-
-      <div class="field">
-        <div class="field-top">
-          <span class="grouplabel" id="wLbl">Ширина стеллажа</span>
-        </div>
-        <div class="seg" role="group" aria-labelledby="wLbl">
-          <button type="button" data-w="100" aria-pressed="false">100 см</button>
-          <button type="button" data-w="120" aria-pressed="true">120 см — 24 ячейки</button>
+    <div class="panel">
+      <div class="panel-top">
+        <div class="rack" id="rackWrap" aria-hidden="true"></div>
+        <div class="panel-num">
+          <div class="pn-cap">в месяц</div>
+          <div class="pn-big" id="total">—</div>
+          <div class="pn-sub" id="capLine">—</div>
+          <div class="pn-pay" id="paybackText">—</div>
         </div>
       </div>
 
-      <div class="result" aria-live="polite">
-        <div class="cap">Доход пункта в месяц</div>
-        <div class="big" id="total">—</div>
-        <div class="result-rows">
-          <div><span>За размещение товара</span><span id="rPlace">—</span></div>
-          <div><span>За обработку операций</span><span id="rOps">—</span></div>
-          <div><span>Ёмкость и ячейки</span><span id="rCap">—</span></div>
-          <div><span>За год</span><span id="rYear">—</span></div>
+      <div class="ctl">
+        <div class="ctl-row">
+          <label for="racks">Стеллажей</label>
+          <div class="stepper">
+            <button type="button" data-step="racks" data-d="-1" aria-label="Убрать стеллаж">−</button>
+            <output id="racksVal" for="racks">2</output>
+            <button type="button" data-step="racks" data-d="1" aria-label="Добавить стеллаж">+</button>
+          </div>
+          <input type="range" id="racks" min="1" max="8" step="1" value="2" class="sr-range">
         </div>
-        <div class="payback">
-          <span id="paybackText">Окупаемость комплекта: <b>—</b></span>
+
+        <div class="ctl-row">
+          <label for="fill">Заполнено</label>
+          <input type="range" id="fill" min="10" max="100" step="5" value="60">
+          <output id="fillVal" for="fill">60 %</output>
+        </div>
+
+        <div class="ctl-row">
+          <label for="returns">Отказов в месяц</label>
+          <input type="range" id="returns" min="0" max="700" step="10" value="150">
+          <output id="returnsVal" for="returns">150</output>
         </div>
       </div>
 
-      <a href="#zayavka" class="btn btn-primary btn-block" style="margin-top:16px">
+      <div class="panel-split">
+        <div><span id="rPlace">—</span><i>за размещение</i></div>
+        <div><span id="rOps">—</span><i>за обработку</i></div>
+        <div><span id="rYear">—</span><i>за год</i></div>
+      </div>
+
+      <div class="upsell" id="upsell" hidden>
+        <div class="up-txt" id="upsellText"></div>
+        <button type="button" class="up-btn" id="upsellBtn">Добавить</button>
+      </div>
+
+      <a href="#zayavka" class="btn btn-primary btn-block" style="margin-top:12px">
         Получить цену комплекта</a>
-      <p class="tiny" style="margin-top:11px;margin-bottom:0">Тарифы взяты из условий
-      программы Ozon: 15 ₽ за возврат, 5 ₽ за перемещение, 5 ₽ за подготовку,
-      0,2 ₽ за литр в день.</p>
+      <p class="panel-note">Схема — один стеллаж<span id="rackMul"></span>. Плата за
+      размещение растёт с числом ячеек, плата за обработку — с потоком пункта, а не с
+      числом стеллажей.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ПОДБОР ПО ПЛОЩАДИ -->
+<section class="rise">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Сколько поставить</div>
+      <h2>Доход упирается в свободное место</h2>
+      <p class="sub">Плата за размещение считается по литрам занятого объёма. Значит
+      предел заработка задаёт не поток, а то, сколько ячеек помещается в вашем пункте.</p>
+    </div>
+    <div class="card card-lg">
+      <div class="field">
+        <div class="field-top">
+          <label for="freeM2">Свободного места под новые стеллажи</label>
+          <span class="val" id="freeVal">4 м²</span>
+        </div>
+        <input type="range" id="freeM2" min="1" max="20" step="1" value="4">
+      </div>
+      <div class="fit-out" id="fitOut">—</div>
+      <div class="ширина-выбор field" style="margin-top:18px;margin-bottom:0">
+        <div class="field-top"><span class="grouplabel" id="wLbl">Ширина стеллажа</span></div>
+        <div class="seg" role="group" aria-labelledby="wLbl">
+          <button type="button" data-w="100" aria-pressed="false">100 см · 18 ячеек</button>
+          <button type="button" data-w="120" aria-pressed="true">120 см · 24 ячейки</button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -533,6 +649,36 @@ footer p{margin-bottom:8px}
   </div>
 </section>
 
+<!-- ДОВЕРИЕ -->
+<section class="rise">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Как это работает</div>
+      <h2>Условия поставки</h2>
+    </div>
+    <div class="facts" style="grid-template-columns:1fr">
+      <div class="fact"><b>Сроки</b><span>Комплекты со склада отгружаются за 2–5 рабочих дней.
+        Под заказ на партию от 50 штук — срок называем после подтверждения загрузки
+        производства, обычно 3–4 недели.</span></div>
+      <div class="fact"><b>Оплата</b><span>Для ИП и юрлиц — счёт с НДС и закрывающие
+        документы. Для розничного заказа — оплата картой при подтверждении. Предоплата
+        только после того, как вы получили счёт и согласовали срок.</span></div>
+      <div class="fact"><b>Доставка</b><span>Транспортной компанией до вашего города.
+        Комплект едет в разобранном виде: пачка 126 × 53 × 14 см, около 33 кг — это
+        обычный тариф, а не длинномер.</span></div>
+      <div class="fact"><b>Что с браком</b><span>Если деталь пришла помятой или не
+        подошла по размеру — меняем за свой счёт. Претензию принимаем в течение 14 дней
+        с момента получения, по фотографии.</span></div>
+      <div class="fact"><b>Документы</b><span>С комплектом идут паспорт изделия с
+        указанием нагрузки на ярус, инструкция по сборке с моментами затяжки и табличка
+        грузоподъёмности формата А4 — этого требует ГОСТ Р 55525-2017.</span></div>
+    </div>
+    <p class="tiny" style="margin-top:14px">Мы не производитель «в гараже»: изделия
+    делаются на действующих металлообрабатывающих производствах, а конструкция
+    проверяется расчётом по двум документам — ГОСТ Р 55525-2017 и ТР ТС 025/2012.</p>
+  </div>
+</section>
+
 <!-- ЗАЯВКА -->
 <section class="rise" id="zayavka">
   <div class="wrap">
@@ -574,6 +720,57 @@ footer p{margin-bottom:8px}
         Открыть Telegram с заявкой</a>
       <button class="btn btn-ghost btn-block" id="copyBtn" type="button">Скопировать текст</button>
     </div>
+  </div>
+</section>
+
+<!-- ИСТОЧНИКИ -->
+<section class="rise" id="istochniki">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Проверьте сами</div>
+      <h2>Откуда взято каждое число</h2>
+      <p class="sub">Мы не просим верить на слово. Ниже — первоисточники: условия
+      программы, официальные документы Ozon и нормативы, по которым считается
+      прочность.</p>
+    </div>
+    <ul class="srcs">
+      <li>
+        <b>Условия программы и тарифы</b>
+        <em>Личный кабинет партнёра Ozon и раздел помощи для пунктов выдачи — там
+        опубликованы ставки за обработку возврата, перемещение на ячейку, подготовку к
+        отправке и размещение по литрам.</em>
+        <a href="https://job.ozon.ru/pvz/" target="_blank" rel="noopener nofollow">
+          Партнёрам Ozon →</a>
+      </li>
+      <li>
+        <b>Требования к оборудованию</b>
+        <em>Открытый стеллаж на 5 полок, высота 200 см, ширина 120 или 100 см, глубина
+        40 см, нагрузка 120 кг на полку; коробки 40 × 28 × 34 см — 24 штуки на стеллаж
+        шириной 120 см. Смотрите инструкцию в своём кабинете партнёра.</em>
+        <a href="https://seller-edu.ozon.ru/" target="_blank" rel="noopener nofollow">
+          База знаний Ozon →</a>
+      </li>
+      <li>
+        <b>ГОСТ Р 55525-2017 «Стеллажи сборно-разборные»</b>
+        <em>По нему считается прочность: запас по пределу текучести не менее 1,25,
+        прогиб не более 1/200 пролёта, гибкость стоек не более 120. Там же сказано, что
+        отсутствие крепления к полу допускается только по прямому указанию
+        изготовителя.</em>
+        <a href="https://docs.cntd.ru/document/1200143502" target="_blank" rel="noopener nofollow">
+          Текст стандарта →</a>
+      </li>
+      <li>
+        <b>ТР ТС 025/2012 «О безопасности мебельной продукции»</b>
+        <em>Стеллажи названы в Приложении 1, пункт 2.5 — значит декларирование
+        обязательно. В Приложении 2, таблица 7: прочность несущих элементов из металла
+        150 даН/м², прогиб 6 мм на метр длины.</em>
+        <a href="https://www.alta.ru/tamdoc/12sr0032/" target="_blank" rel="noopener nofollow">
+          Текст регламента →</a>
+      </li>
+    </ul>
+    <p class="tiny" style="margin-top:14px">Мы не связаны с Ozon и не являемся его
+    представителем. Ссылки ведут на официальные ресурсы площадки, чтобы вы могли
+    сверить условия программы с первоисточником — они могут меняться.</p>
   </div>
 </section>
 
@@ -645,6 +842,37 @@ footer p{margin-bottom:8px}
   var $ = function(id){ return document.getElementById(id); };
   var fmt = function(n){ return Math.round(n).toLocaleString('ru-RU'); };
 
+  /* ── откуда пришёл человек ────────────────────────────────────────
+     Без метки источника канал невозможно оценить: заявки приходят, а какой
+     канал их дал — неизвестно. Метку кладём один раз и держим до заявки. */
+  var SRC_KEY = 'pvz_src_v1';
+  function grabSource(){
+    try {
+      var saved = localStorage.getItem(SRC_KEY);
+      var qs = new URLSearchParams(location.search);
+      var utm = ['utm_source','utm_medium','utm_campaign','utm_content'].map(function(k){
+        return qs.get(k);
+      }).filter(Boolean).join(' / ');
+      var fresh = utm || (document.referrer ? 'переход: ' + document.referrer.split('/')[2] : '');
+      if (fresh) { localStorage.setItem(SRC_KEY, fresh); return fresh; }
+      return saved || 'прямой заход';
+    } catch(e){ return 'источник не определён'; }
+  }
+
+  /* ── что человек успел сделать до заявки ──────────────────────────
+     Пишем не «аналитику ради аналитики», а ровно те шаги, по которым видно,
+     где люди отваливаются: считал ли доход, проверял ли свой стеллаж,
+     смотрел ли, сколько влезет. Всё остаётся в браузере и уходит только
+     вместе с заявкой, которую человек отправляет сам. */
+  var steps = { calc:0, check:0, fit:0, upsell:0, opened:Date.now() };
+  function step(k){ steps[k] = (steps[k]||0) + 1; }
+  function funnel(){
+    var mins = Math.round((Date.now() - steps.opened) / 60000);
+    return 'шаги: доход ' + steps.calc + ', проверка стеллажа ' + steps.check +
+           ', подбор количества ' + steps.fit + ', апсейл ' + steps.upsell +
+           '; на странице ' + (mins < 1 ? 'меньше минуты' : mins + ' мин');
+  }
+
   /* ── калькулятор дохода ─────────────────────────────────────────── */
   var state = { racks:2, fill:60, returns:150, width:120, levels:6 };
 
@@ -655,15 +883,51 @@ footer p{margin-bottom:8px}
     return many;
   }
 
+  /* Схема стеллажа. Рисуем ровно то, что человек увидит у себя: ярусы и
+     ячейки в ряду по ширине, заполненные — янтарём. Это не украшение: по
+     числу горящих ячеек сразу понятно, за что именно платит площадка. */
+  function drawRack(perRow, levels, fill){
+    var W = 100, H = 132, pad = 7, gap = 2.4;
+    var innerW = W - pad*2, innerH = H - pad*2;
+    var cw = (innerW - gap*(perRow-1)) / perRow;
+    var ch = (innerH - gap*(levels-1)) / levels;
+    var total = perRow * levels, lit = Math.round(total * fill);
+    var cells = '', n = 0;
+    for (var row = 0; row < levels; row++){
+      for (var col = 0; col < perRow; col++){
+        n++;
+        var on = (total - n) < lit;   // заполняем снизу вверх
+        cells += '<rect x="' + (pad + col*(cw+gap)).toFixed(1) + '" y="' +
+          (pad + row*(ch+gap)).toFixed(1) + '" width="' + cw.toFixed(1) + '" height="' +
+          ch.toFixed(1) + '" rx="1.2" class="' + (on ? 'cellOn' : 'cellOff') + '"/>';
+      }
+    }
+    var shelves = '';
+    for (var l = 1; l < levels; l++){
+      var y = (pad + l*(ch+gap) - gap/2).toFixed(1);
+      shelves += '<line x1="' + pad + '" y1="' + y + '" x2="' + (W-pad) + '" y2="' + y +
+                 '" class="shelf"/>';
+    }
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" ' +
+      'aria-label="Схема стеллажа: ' + levels + ' ярусов, заполнено ' +
+      Math.round(fill*100) + ' процентов">' + cells + shelves +
+      '<path class="frame" d="M' + (pad-3) + ' ' + (pad-3) + ' V' + (H-pad+3) +
+      ' M' + (W-pad+3) + ' ' + (pad-3) + ' V' + (H-pad+3) +
+      ' M' + (pad-3) + ' ' + (pad-3) + ' H' + (W-pad+3) +
+      ' M' + (pad-3) + ' ' + (H-pad+3) + ' H' + (W-pad+3) + '"/></svg>';
+  }
+
   function recalc(){
     var r = pvzIncome({ racks:state.racks, widthCm:state.width, levels:state.levels,
                         fill:state.fill/100, returnsPerMonth:state.returns });
     $('total').innerHTML = fmt(r.total) + ' <small>₽</small>';
     $('rPlace').textContent = fmt(r.placement) + ' ₽';
     $('rOps').textContent = fmt(r.operations) + ' ₽';
-    $('rCap').textContent = fmt(r.capacity) + ' л · ' + r.boxes + ' ' +
-        plural(r.boxes,'ячейка','ячейки','ячеек');
     $('rYear').textContent = fmt(r.total * 12) + ' ₽';
+    $('capLine').textContent = r.boxes + ' ' + plural(r.boxes,'ячейка','ячейки','ячеек') +
+        ' · ' + fmt(r.capacity) + ' л';
+    $('rackWrap').innerHTML = drawRack(state.width >= 120 ? 4 : 3, state.levels, state.fill/100);
+    $('rackMul').textContent = state.racks > 1 ? ' из ' + state.racks : '';
 
     var invest = KIT_PRICE * state.racks;
     if (r.total > 0){
@@ -675,14 +939,43 @@ footer p{margin-bottom:8px}
         txt = String(rounded).replace('.', ',') + ' ' +
               plural(Math.round(rounded), 'месяц', 'месяца', 'месяцев');
       }
-      $('paybackText').innerHTML = 'Окупаемость ' + state.racks + ' ' +
-        plural(state.racks,'комплекта','комплектов','комплектов') + ': <b>' + txt + '</b>';
+      $('paybackText').innerHTML = 'Окупится за <b>' + txt + '</b>';
     } else {
-      $('paybackText').innerHTML = 'Окупаемость: <b>—</b>';
+      $('paybackText').innerHTML = 'Окупится за <b>—</b>';
     }
     $('stickySum').textContent = fmt(r.total) + ' ₽';
+
+    /* Апсейл честный: следующий стеллаж добавляет ТОЛЬКО плату за размещение.
+       Операции (15 + 5 + 5 ₽ за отказ) привязаны к потоку пункта и не растут
+       от числа стеллажей — приписывать их себе было бы обманом. */
+    var up = $('upsell');
+    if (state.racks < 8){
+      var next = pvzIncome({ racks:state.racks+1, widthCm:state.width, levels:state.levels,
+                             fill:state.fill/100, returnsPerMonth:state.returns });
+      var delta = next.total - r.total;
+      up.hidden = false;
+      $('upsellText').innerHTML = 'Стеллаж №' + (state.racks + 1) + ' добавит <b>' +
+        fmt(delta) + ' ₽/мес</b> · <b>' + fmt(delta * 12) + ' ₽</b> за год';
+    } else { up.hidden = true; }
+
+    var free = +$('freeM2').value;
+    var fit = racksFit(free, state.width);
+    var fitEl = $('fitOut');
+    if (fit <= 0){
+      fitEl.innerHTML = 'На такой площади стеллаж 200 × ' + state.width +
+        ' × 40 см уже не встанет — нужно хотя бы 1,2 м² с подходом к полкам.';
+    } else {
+      var atFit = pvzIncome({ racks:fit, widthCm:state.width, levels:state.levels,
+                              fill:state.fill/100, returnsPerMonth:state.returns });
+      fitEl.innerHTML = 'На <b>' + free + ' м²</b> встанет <b>' + fit + '</b> ' +
+        plural(fit,'стеллаж','стеллажа','стеллажей') + '. Полная загрузка этого места дала бы <b>' +
+        fmt(atFit.total) + ' ₽ в месяц</b>' +
+        (fit > state.racks ? ' — на ' + fmt(atFit.total - r.total) + ' ₽ больше, чем сейчас в расчёте.' : '.');
+    }
+
     window.__lead = { income: Math.round(r.total), racks: state.racks,
-                      width: state.width, fill: state.fill, returns: state.returns };
+                      width: state.width, fill: state.fill, returns: state.returns,
+                      free: free, fit: fit };
   }
 
   function bindRange(id, key, render){
@@ -691,9 +984,37 @@ footer p{margin-bottom:8px}
       state[key] = +el.value; render(); recalc();
     });
   }
-  bindRange('racks','racks', function(){ $('racksVal').textContent = state.racks; });
-  bindRange('fill','fill', function(){ $('fillVal').textContent = state.fill + ' %'; });
-  bindRange('returns','returns', function(){ $('returnsVal').textContent = state.returns; });
+  bindRange('racks','racks', function(){ $('racksVal').textContent = state.racks; step('calc'); });
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-step]'), function(b){
+    b.addEventListener('click', function(){
+      var d = +b.dataset.d, el = $(b.dataset.step);
+      var v = Math.min(+el.max, Math.max(+el.min, +el.value + d));
+      if (v === +el.value) return;
+      el.value = v; state.racks = v;
+      $('racksVal').textContent = v;
+      step('calc'); recalc(); syncStepper();
+    });
+  });
+  function syncStepper(){
+    var el = $('racks');
+    document.querySelector('[data-step="racks"][data-d="-1"]').disabled = +el.value <= +el.min;
+    document.querySelector('[data-step="racks"][data-d="1"]').disabled = +el.value >= +el.max;
+  }
+  bindRange('fill','fill', function(){ $('fillVal').textContent = state.fill + ' %'; step('calc'); });
+  bindRange('returns','returns', function(){ $('returnsVal').textContent = state.returns; step('calc'); });
+
+  $('freeM2').addEventListener('input', function(){
+    $('freeVal').textContent = this.value + ' м²'; step('fit'); recalc();
+  });
+  $('upsellBtn').addEventListener('click', function(){
+    if (state.racks >= 8) return;
+    state.racks += 1;
+    $('racks').value = state.racks;
+    $('racksVal').textContent = state.racks;
+    step('upsell'); recalc(); syncStepper();
+    if ($('total').animate) $('total').animate([{opacity:.35},{opacity:1}], {duration:280});
+  });
 
   Array.prototype.forEach.call(document.querySelectorAll('[data-w]'), function(b){
     b.addEventListener('click', function(){
@@ -703,7 +1024,7 @@ footer p{margin-bottom:8px}
       state.width = +b.dataset.w; recalc();
     });
   });
-  recalc();
+  recalc(); syncStepper();
 
   /* ── проверка стеллажа ──────────────────────────────────────────── */
   var chk = { w:120, t:0.6, b:30, lip:0 };
@@ -728,10 +1049,10 @@ footer p{margin-bottom:8px}
     window.__check = { w:chk.w, t:chk.t, b:chk.b, lip:chk.lip, held:held };
   }
   $('cw').addEventListener('input', function(){
-    chk.w = +this.value; $('cwVal').textContent = chk.w + ' см'; recheck();
+    chk.w = +this.value; $('cwVal').textContent = chk.w + ' см'; step('check'); recheck();
   });
-  $('ct').addEventListener('change', function(){ chk.t = +this.value; recheck(); });
-  $('cb').addEventListener('change', function(){ chk.b = +this.value; recheck(); });
+  $('ct').addEventListener('change', function(){ chk.t = +this.value; step('check'); recheck(); });
+  $('cb').addEventListener('change', function(){ chk.b = +this.value; step('check'); recheck(); });
   Array.prototype.forEach.call(document.querySelectorAll('[data-lip]'), function(b){
     b.addEventListener('click', function(){
       Array.prototype.forEach.call(document.querySelectorAll('[data-lip]'), function(x){
@@ -762,7 +1083,9 @@ footer p{margin-bottom:8px}
       'отказов ' + l.returns + '/мес\n' +
       'Доход по калькулятору: ' + fmt(l.income) + ' ₽/мес\n' +
       'Свой стеллаж: полка ' + c.t + ' мм, борт ' + c.b + ' мм' +
-      (c.lip ? ', двойной подгиб' : ', без подгиба') + ' → держит ' + c.held + ' кг';
+      (c.lip ? ', двойной подгиб' : ', без подгиба') + ' → держит ' + c.held + ' кг\n' +
+      'Свободно ' + l.free + ' м², влезет ' + l.fit + '\n' +
+      'Источник: ' + grabSource() + '\n' + funnel();
     window.__leadText = text;
     $('tgLink').href = 'https://t.me/' + TG_USER + '?text=' + encodeURIComponent(text);
     form.hidden = true;
