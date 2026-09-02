@@ -745,6 +745,21 @@ footer p{margin-bottom:8px}
                placeholder="+7 … или @nickname" required>
       </div>
       <div class="field">
+        <label for="fAlso">Что ещё нужно пункту</label>
+        <div class="selectwrap">
+          <select id="fAlso" name="also">
+            <option value="">Только стеллажи хранения</option>
+            <option>Стеллажи под посылки</option>
+            <option>Стойка выдачи</option>
+            <option>Примерочная и зеркало</option>
+            <option>Скамья, вешалка, стойка для пакетов</option>
+            <option>Оснащаю пункт с нуля — нужно всё</option>
+          </select>
+        </div>
+        <p class="note" style="margin-top:7px">Подскажем и по остальному оснащению —
+        это тот же поставщик и одна доставка.</p>
+      </div>
+      <div class="field">
         <label for="fCount">Сколько комплектов нужно</label>
         <div class="selectwrap">
           <select id="fCount" name="count">
@@ -861,8 +876,13 @@ footer p{margin-bottom:8px}
 
 <footer>
   <div class="wrap">
+    <div class="contacts" id="contacts">
+      <b>Связаться</b>
+      <div class="contact-links" id="contactLinks"></div>
+    </div>
     <p><b style="color:var(--ink)">Склад в ПВЗ</b> — комплекты для хранения товаров
-    продавцов в пунктах выдачи.</p>
+    продавцов в пунктах выдачи и оснащение пунктов: стеллажи под посылки, стойка
+    выдачи, примерочная, скамьи и вешалки.</p>
     <p class="tiny">Калькулятор носит справочный характер: фактический доход зависит от
     потока вашего пункта и условий вашего договора с площадкой. Расчёт несущей способности
     выполняется по ГОСТ Р 55525-2017 и показывает результат для введённых вами размеров —
@@ -881,8 +901,16 @@ footer p{margin-bottom:8px}
 <script>
 (function(){
   'use strict';
-  var KIT_PRICE = 12900;          // цена комплекта с НДС, ₽
-  var TG_USER = 'seminyuri';      // ← заменить на рабочий аккаунт приёма заявок
+  /* ═══ НАСТРОЙКИ — заменить перед запуском трафика ═══════════════════
+     Пока здесь заглушки, заявки уходят не туда. Это единственное, что
+     мешает пустить рекламу. */
+  var CONTACT = {
+    tg:    'seminyuri',                 // ← аккаунт приёма заявок в Telegram
+    phone: '',                          // ← телефон в формате +7XXXXXXXXXX, пусто — скрыть
+    email: ''                           // ← почта, пусто — скрыть
+  };
+  var KIT_PRICE = 12900;                // цена комплекта с НДС, ₽
+  var TG_USER = CONTACT.tg;
 
   var $ = function(id){ return document.getElementById(id); };
   var fmt = function(n){ return Math.round(n).toLocaleString('ru-RU'); };
@@ -1163,11 +1191,12 @@ footer p{margin-bottom:8px}
       'Город: ' + city + '\n' +
       'Контакт: ' + contact + '\n' +
       'Комплектов: ' + $('fCount').value + '\n' +
+      ($('fAlso').value ? 'Нужно ещё: ' + $('fAlso').value + '\n' : '') +
       '— расчёт с сайта —\n' +
       'Стеллажей: ' + l.racks + ' по ' + l.width + ' см, заполнение ' + l.fill + ' %, ' +
       'отказов ' + l.returns + '/мес\n' +
       'Доход по калькулятору: ' + fmt(l.income) + ' ₽/мес\n' +
-      'Свой стеллаж: полка ' + c.t + ' мм, борт ' + c.b + ' мм' +
+      'Свой стеллаж: полка ' + String(c.t).replace('.', ',') + ' мм, борт ' + c.b + ' мм' +
       (c.lip ? ', двойной подгиб' : ', без подгиба') + ' → держит ' + c.held + ' кг\n' +
       'Свободно ' + l.free + ' м², влезет ' + l.fit + '\n' +
       'Источник: ' + grabSource() + '\n' + funnel();
@@ -1192,6 +1221,18 @@ footer p{margin-bottom:8px}
       document.body.removeChild(ta);
     }
   });
+
+  /* ── контакты: показываем только заполненные ─────────────────────── */
+  (function(){
+    var box = $('contactLinks'), html = '';
+    if (CONTACT.tg)    html += '<a class="tg" href="https://t.me/' + CONTACT.tg +
+                               '">Написать в Telegram</a>';
+    if (CONTACT.phone) html += '<a href="tel:' + CONTACT.phone + '">' +
+                               CONTACT.phone.replace(/(\+7)(\d{3})(\d{3})(\d{2})(\d{2})/,
+                               '$1 $2 $3-$4-$5') + '</a>';
+    if (CONTACT.email) html += '<a href="mailto:' + CONTACT.email + '">' + CONTACT.email + '</a>';
+    if (html) box.innerHTML = html; else $('contacts').hidden = true;
+  })();
 
   /* ── липкая кнопка и появление секций ───────────────────────────── */
   var sticky = $('sticky'), hero = document.querySelector('.hero');
