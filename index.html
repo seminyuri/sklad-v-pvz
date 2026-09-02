@@ -171,10 +171,10 @@ section{padding:44px 0}
 .hero h1 .hl{color:#F0913A}
 .hero .lead{color:#98A5AE;font-size:14.5px;margin-bottom:14px;max-width:32ch}
 
-.panel{background:#161C21;border:1px solid #232C33;border-radius:16px;padding:14px;
+.panel{background:#161C21;border:1px solid #232C33;border-radius:16px;padding:13px;
   box-shadow:0 20px 50px rgba(0,0,0,.4)}
 .panel-top{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;
-  margin-bottom:10px}
+  margin-bottom:8px}
 
 /* схема стеллажа: ячейки заполняются по мере роста загрузки */
 /* Место под схему резервируем заранее: она рисуется скриптом, и без
@@ -191,8 +191,8 @@ section{padding:44px 0}
 .pn-big{font-family:Unbounded,sans-serif;font-weight:700;font-size:clamp(30px,8.6vw,42px);
   line-height:1;min-height:1em;letter-spacing:-.03em;color:#fff;font-variant-numeric:tabular-nums}
 .pn-big small{font-size:.42em;font-weight:600;color:#98A5AE;letter-spacing:0}
-.pn-sub{font-size:12.5px;color:#98A5AE;margin-top:6px;font-variant-numeric:tabular-nums}
-.pn-pay{font-size:12.5px;color:#7BC79A;margin-top:3px;font-variant-numeric:tabular-nums}
+.pn-sub{font-size:12.5px;color:#98A5AE;margin-top:4px;font-variant-numeric:tabular-nums}
+.pn-pay{font-size:12.5px;color:#7BC79A;margin-top:2px;font-variant-numeric:tabular-nums}
 
 /* компактные контролы: одна строка на параметр */
 .ctl{display:grid;gap:2px;padding:6px 0;border-top:1px solid #232C33;border-bottom:1px solid #232C33}
@@ -217,9 +217,12 @@ section{padding:44px 0}
 .stepper button:disabled{opacity:.3;cursor:default}
 .stepper output{min-width:26px;text-align:center;font-size:16px;color:#fff}
 
+.lost{margin-top:8px;padding:8px 12px;border-radius:10px;background:#2B1A17;
+  border:1px solid #4A2A22;font-size:12.5px;line-height:1.35;color:#E8CEC6}
+.lost b{color:#EB7259;font-variant-numeric:tabular-nums;white-space:nowrap}
 .panel-split{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#232C33;
   margin-top:10px;border-radius:10px;overflow:hidden}
-.panel-split div{background:#161C21;padding:9px 10px;text-align:center}
+.panel-split div{background:#161C21;padding:8px 10px;text-align:center}
 .panel-split span{display:block;font-weight:600;font-size:14px;color:#EDF1EE;
   font-variant-numeric:tabular-nums}
 .panel-split i{display:block;font-style:normal;font-size:11px;color:#7E8B94;margin-top:2px}
@@ -552,6 +555,10 @@ input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;marg
         </div>
       </div>
 
+      <div class="lost" id="lost" hidden>
+        <span id="lostText"></span>
+      </div>
+
       <div class="panel-split">
         <div><span id="rPlace">—</span><i>за размещение</i></div>
         <div><span id="rOps">—</span><i>за обработку</i></div>
@@ -563,7 +570,7 @@ input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;marg
         <button type="button" class="up-btn" id="upsellBtn">Добавить</button>
       </div>
 
-      <a href="#zayavka" class="btn btn-primary btn-block" style="margin-top:12px">
+      <a href="#zayavka" class="btn btn-primary btn-block" style="margin-top:6px">
         Получить цену комплекта</a>
       <p class="panel-note">Схема — один стеллаж<span id="rackMul"></span>. Плата за
       размещение растёт с числом ячеек, плата за обработку — с потоком пункта, а не с
@@ -900,6 +907,28 @@ input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;marg
       стеллаж шириной 120 см нужно около 1,2 м² с учётом подхода к полкам.</p></div>
     </details>
     <details>
+      <summary>Видел стеллажи дешевле — зачем платить больше</summary>
+      <div class="body"><p>Дешевле бывает, вопрос — что там с нагрузкой на секцию.
+      Часто в карточке стоит «120 кг на полку» и рядом «450 кг на стеллаж» при пяти
+      полках: то есть все полки одновременно загрузить нельзя, а покупатель об этом не
+      догадывается. И крепление к стене обычно не входит, а без него стеллаж высотой
+      200 см при глубине 40 см не ставят.</p>
+      <p>По деньгам разница в цене окупается за неделю работы, а прогнувшаяся полка
+      стоит замены всего стеллажа.</p></div>
+    </details>
+    <details>
+      <summary>А если программа не пойдёт — деньги зря</summary>
+      <div class="body"><p>Мы не обещаем чужой доход: сколько заплатит площадка, решает
+      площадка. Но стеллаж остаётся стеллажом — под посылки он тоже годится, а
+      требование 120 кг означает лишь, что он прочнее обычного. Риск здесь не потерять
+      вложенное, а не успеть заработать.</p></div>
+    </details>
+    <details>
+      <summary>Почему не купить напрямую у Ozon</summary>
+      <div class="body"><p>Площадка оборудование не продаёт — она ставит требование.
+      Что купить и у кого, решает владелец пункта.</p></div>
+    </details>
+    <details>
       <summary>Откуда цифры в калькуляторе</summary>
       <div class="body"><p>Тарифы — из условий программы Ozon: 15 ₽ за обработку возврата,
       5 ₽ за перемещение на ячейку, 5 ₽ за подготовку к отправке, 0,2 ₽ за литр товара
@@ -1067,6 +1096,15 @@ input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;marg
       $('upsellText').innerHTML = 'Стеллаж №' + (state.racks + 1) + ' добавит <b>' +
         fmt(delta) + ' ₽/мес</b> · <b>' + fmt(delta * 12) + ' ₽</b> за год';
     } else { up.hidden = true; }
+
+    /* Цена промедления. Считается честно: пока стеллажа нет, пункт в программе
+       не участвует вовсе, и не начисляется НИЧЕГО — ни за размещение, ни за
+       обработку. Поэтому берём весь доход, а не только его часть. Никаких
+       выдуманных «акций до конца недели»: срок здесь настоящий. */
+    var perDay = r.total / 30;
+    $('lost').hidden = r.total <= 0;
+    $('lostText').innerHTML = 'Пока стеллажа нет, не начисляется <b>' + fmt(perDay) +
+      ' ₽ в день</b> — <b>' + fmt(perDay * 7) + ' ₽</b> за неделю.';
 
     var free = +$('freeM2').value;
     var fit = racksFit(free, state.width);
