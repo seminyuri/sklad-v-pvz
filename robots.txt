@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://seminyuri.github.io/sklad-v-pvz/sitemap.xml
