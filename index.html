@@ -34,6 +34,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('js
      может одновременно давать 4,5 с белым текстом на себе и 4,5 сам на светлом
      фоне. Проверено расчётом контраста, а не на глаз. */
   --signal:#B85B02;        /* заливка кнопок: белый на ней даёт 4,63 */
+  --on-signal:#FFFFFF;     /* что писать поверх заливки */
   --signal-ink:#A24F01;    /* акцентный текст на светлом: 4,97 на фоне */
   --signal-soft:#FAEADB;
   --ok:#1C7340; --ok-soft:#E1F0E6;
@@ -46,10 +47,14 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('js
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#12171B; --bg-2:#171D22; --card:#1B2228;
-    --ink:#EAEEEA; --ink-2:#9BA5AD; --ink-3:#6F7A83;
+    --ink:#EAEEEA; --ink-2:#9BA5AD; --ink-3:#8A959D;
     --line:#2A333A; --line-2:#232B31;
     --brand:#D7E3F2; --brand-ink:#12171B;
     --signal:#F0913A; --signal-ink:#F0913A; --signal-soft:#33261A;
+  --on-signal:#12171B;
+    /* Акцент в тёмной теме светлый: белый поверх него даёт 2,38, а тёмный —
+       7,57. Кнопка обязана менять цвет текста вместе с темой. */
+    --on-signal:#12171B;
     --ok:#5FB783; --ok-soft:#16281E;
     --bad:#E47963; --bad-soft:#2B1A17;
     --shadow-s:0 1px 2px rgba(0,0,0,.5);
@@ -59,10 +64,11 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('js
 }
 :root[data-theme="dark"]{
   --bg:#12171B; --bg-2:#171D22; --card:#1B2228;
-  --ink:#EAEEEA; --ink-2:#9BA5AD; --ink-3:#6F7A83;
+  --ink:#EAEEEA; --ink-2:#9BA5AD; --ink-3:#8A959D;
   --line:#2A333A; --line-2:#232B31;
   --brand:#D7E3F2; --brand-ink:#12171B;
   --signal:#F0913A; --signal-ink:#F0913A; --signal-soft:#33261A;
+  --on-signal:#12171B;
   --ok:#5FB783; --ok-soft:#16281E;
   --bad:#E47963; --bad-soft:#2B1A17;
   --shadow-s:0 1px 2px rgba(0,0,0,.5);
@@ -136,7 +142,7 @@ section{padding:44px 0}
   -webkit-tap-highlight-color:transparent;
 }
 .btn:active{transform:translateY(1px)}
-.btn-primary{background:var(--signal);color:#fff;box-shadow:var(--shadow-m)}
+.btn-primary{background:var(--signal);color:var(--on-signal);box-shadow:var(--shadow-m)}
 .btn-primary:hover{box-shadow:var(--shadow-l)}
 .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
 .btn-ghost:hover{background:var(--bg-2)}
@@ -156,6 +162,8 @@ section{padding:44px 0}
 .hero{
   background:#101519;color:#EDF1EE;padding:18px 0 30px;position:relative;overflow:hidden;
   border-bottom:1px solid #1E262C;
+  --ink:#EDF1EE; --ink-2:#9BA5AD; --ink-3:#8A959D; --signal-ink:#F0913A;
+  --ok:#5FB783; --bad:#E47963; --line:#2C353C; --card:#161C21;
 }
 .hero::before{
   content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
@@ -337,6 +345,9 @@ select{width:100%;min-height:52px;padding:13px 40px 13px 14px;border-radius:var(
 .verdict .v-top{display:flex;align-items:center;gap:11px;margin-bottom:9px}
 .verdict .v-ico{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;
   font-weight:700;color:#fff;font-size:18px}
+/* На светлых заливках тёмной темы белый знак теряется: 2,45 у зелёной и 2,91
+   у красной. Меняем знак на тёмный вместе с темой. */
+.dark .verdict .v-ico{color:#12171B}
 .verdict.pass .v-ico{background:var(--ok)}
 .verdict.fail .v-ico{background:var(--bad)}
 .verdict .v-title{font-family:Unbounded,sans-serif;font-weight:600;font-size:17px;line-height:1.2}
@@ -347,7 +358,17 @@ select{width:100%;min-height:52px;padding:13px 40px 13px 14px;border-radius:var(
 
 
 /* ═══ ТЁМНАЯ СЕКЦИЯ — второй акцент страницы ══════════════════════════ */
-.dark{background:#101519;color:#EDF1EE;position:relative;overflow:hidden}
+.dark{
+  background:#101519;color:#EDF1EE;position:relative;overflow:hidden;
+  /* Секция всегда тёмная, независимо от темы страницы, поэтому несёт
+     собственный набор токенов. Иначе в светлой теме она берёт «светлые»
+     красный и зелёный, и знак вердикта на них перестаёт читаться. */
+  --ink:#EDF1EE; --ink-2:#9BA5AD; --ink-3:#8A959D;
+  --signal-ink:#F0913A;
+  --ok:#5FB783; --ok-soft:#16281E;
+  --bad:#E47963; --bad-soft:#2B1A17;
+  --line:#2C353C; --line-2:#232C33; --card:#161C21;
+}
 .dark::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.45;
   background-image:linear-gradient(#FFFFFF08 1px,transparent 1px),
                    linear-gradient(90deg,#FFFFFF08 1px,transparent 1px);
@@ -480,7 +501,7 @@ footer p{margin-bottom:8px}
   min-height:48px;padding:0 18px;border-radius:var(--r-s);border:1.5px solid var(--line);
   text-decoration:none;font-weight:600;font-size:15px;color:var(--ink)}
 .contact-links a:hover{background:var(--bg-2)}
-.contact-links a.tg{background:var(--signal);color:#fff;border-color:transparent}
+.contact-links a.tg{background:var(--signal);color:var(--on-signal);border-color:transparent}
 
 /* ── размер тач-целей: 44 px по рекомендации WCAG 2.2 ──────────────────
    Замер на экране 320 px показал кнопки степпера 38 px, ползунки 38 px и
