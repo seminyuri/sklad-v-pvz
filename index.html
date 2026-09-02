@@ -531,6 +531,17 @@ footer p{margin-bottom:8px}
    экран. Видно это было только замером — визуально его прячет clip-path. */
 input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
   overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap;border:0}
+/* ── разбор чужой цифры: потолок отдельно, поток отдельно ── */
+.brk{display:grid;gap:14px}
+.brk-row{padding:15px;border-radius:var(--r-s);background:var(--surface-2);
+  border:1px solid var(--line-soft)}
+.brk-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:7px}
+.brk-k{font-weight:600;font-size:14.5px}
+.brk-v{font-family:Unbounded,sans-serif;font-weight:700;font-size:20px;
+  color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.brk-n{margin:0;font-size:13.5px;line-height:1.5;color:var(--ink-2)}
+.brk-out{margin:15px 0 0;font-size:14.5px;line-height:1.5}
+@media (min-width:700px){.brk{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -734,6 +745,38 @@ input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;marg
   </div>
 </section>
 
+<!-- ОТКУДА 15 ТЫСЯЧ ИЗ НОВОСТЕЙ -->
+<section class="rise" id="pyatnadcat">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Цифра из новостей</div>
+      <h2>«15 тысяч со стеллажа» — откуда они</h2>
+      <p class="sub">Столько Ozon прогнозировал владельцам сетей пунктов. Цифра
+      не выдумана, но она не про любой пункт. Разложим её по тарифам программы.</p>
+    </div>
+    <div class="card card-lg">
+      <div class="brk">
+        <div class="brk-row">
+          <div class="brk-h"><span class="brk-k">За размещение</span><span class="brk-v" id="brkPlace">—</span></div>
+          <p class="brk-n">И это потолок. Стеллаж 120 см — <b id="brkBoxes">24</b>&nbsp;ячейки,
+          <b id="brkCap">914</b>&nbsp;литров, платят 0,2&nbsp;₽ за литр в день. Забитый
+          под завязку, больше он не даёт физически.</p>
+        </div>
+        <div class="brk-row">
+          <div class="brk-h"><span class="brk-k">Остальное — операции</span><span class="brk-v" id="brkOps">—</span></div>
+          <p class="brk-n">По 25&nbsp;₽ за возврат: 15 за обработку, 5 за перенос в
+          ячейку, 5 за подготовку к отправке. Чтобы добрать до пятнадцати тысяч,
+          нужно <b id="brkRet">—</b> <span id="brkRetW">возврата</span> в месяц — это
+          <b id="brkDay">—</b> в день.</p>
+        </div>
+      </div>
+      <p class="brk-out">Пятнадцать тысяч — это крупный пункт с плотным потоком и
+      полной загрузкой. Калькулятор наверху считает по вашим числам, а не по чужим:
+      поставьте свой поток и увидите свою сумму.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ЧТО ПРОИЗОШЛО -->
 <section class="rise">
   <div class="wrap">
@@ -881,6 +924,22 @@ input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;marg
           Партнёрам Ozon →</a>
       </li>
       <li>
+        <b>Цифра «15 тысяч со стеллажа»</b>
+        <em>Это прогноз Ozon, который привёл владелец сети пунктов в интервью, — не
+        публикация площадки и не обещание. Сколько выйдет у вас, зависит от потока
+        и загрузки: разбор этой цифры по тарифам — выше на странице.</em>
+        <a href="https://finance.mail.ru/article/skladnaya-geografiya-69225097/" target="_blank" rel="noopener nofollow">
+          Интервью целиком →</a>
+      </li>
+      <li>
+        <b>Тарифы построчно</b>
+        <em>15 ₽ за обработку возврата, 5 ₽ за перемещение товара на ячейку, 5 ₽ за
+        подготовку к отправке, 0,2 ₽ за литр товара в день за размещение. Проверьте
+        по своему кабинету партнёра — ставки могут меняться.</em>
+        <a href="https://secrets.tbank.ru/novosti/ozon-mini-sklady/" target="_blank" rel="noopener nofollow">
+          Разбор условий →</a>
+      </li>
+      <li>
         <b>Требования к оборудованию</b>
         <em>Открытый стеллаж на 5 полок, высота 200 см, ширина 120 или 100 см, глубина
         40 см, нагрузка 120 кг на полку; коробки 40 × 28 × 34 см — 24 штуки на стеллаж
@@ -1014,6 +1073,14 @@ input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;marg
 
   var $ = function(id){ return document.getElementById(id); };
   var fmt = function(n){ return Math.round(n).toLocaleString('ru-RU'); };
+  /* число на странице считается, а не вписывается, — значит и слово после него
+     должно склоняться само, иначе «381 возврата» переживёт любую правку тарифа */
+  var plural = function(n, one, few, many){
+    n = Math.abs(Math.round(n)) % 100;
+    if (n > 10 && n < 20) return many;
+    n %= 10;
+    return n === 1 ? one : (n >= 2 && n <= 4 ? few : many);
+  };
 
   /* ── откуда пришёл человек ────────────────────────────────────────
      Без метки источника канал невозможно оценить: заявки приходят, а какой
@@ -1355,6 +1422,24 @@ input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;marg
                                '$1 $2 $3-$4-$5') + '</a>';
     if (CONTACT.email) html += '<a href="mailto:' + CONTACT.email + '">' + CONTACT.email + '</a>';
     if (html) box.innerHTML = html; else $('contacts').hidden = true;
+  })();
+
+  /* ── разбор новостной цифры «15 тысяч со стеллажа» ──────────────── */
+  /* Считаем той же функцией, что и калькулятор: иначе страница спорила бы
+     сама с собой, а разойтись эти два числа могут молча. */
+  (function () {
+    var one = pvzIncome({ racks:1, widthCm:120, levels:6, fill:1, returnsPerMonth:0 });
+    var perOp = 25, target = 15000;
+    var rest = target - one.ceiling;
+    var need = Math.round(rest / perOp);
+    var set = function (id, v) { var e = $(id); if (e) e.textContent = v; };
+    set('brkPlace', fmt(one.ceiling) + '\u00A0\u20BD');
+    set('brkOps',   fmt(rest) + '\u00A0\u20BD');
+    set('brkBoxes', one.boxes);
+    set('brkCap',   fmt(one.capacity));
+    set('brkRet',   fmt(need));
+    set('brkRetW',  plural(need, 'возврат', 'возврата', 'возвратов'));
+    set('brkDay',   Math.round(need / 30));
   })();
 
   /* ── липкая кнопка и появление секций ───────────────────────────── */
