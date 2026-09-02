@@ -333,6 +333,57 @@ select{width:100%;min-height:52px;padding:13px 40px 13px 14px;border-radius:var(
 .verdict .why{margin-top:11px;padding-top:11px;border-top:1px solid color-mix(in srgb,var(--ink) 12%,transparent);
   font-size:13.5px;color:var(--ink-2)}
 
+
+/* ═══ ТЁМНАЯ СЕКЦИЯ — второй акцент страницы ══════════════════════════ */
+.dark{background:#101519;color:#EDF1EE;position:relative;overflow:hidden}
+.dark::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.45;
+  background-image:linear-gradient(#FFFFFF08 1px,transparent 1px),
+                   linear-gradient(90deg,#FFFFFF08 1px,transparent 1px);
+  background-size:34px 34px;
+  mask-image:radial-gradient(ellipse 90% 70% at 30% 0%,#000 35%,transparent 100%)}
+.dark .wrap{position:relative}
+.dark h2{color:#fff}
+.sub-dark{color:#98A5AE}
+
+.check-grid{display:grid;gap:16px}
+@media (min-width:820px){.check-grid{grid-template-columns:minmax(0,300px) minmax(0,1fr);
+  gap:36px;align-items:center}}
+
+/* сечение полки в разрезе: видно, что именно держит нагрузку */
+.check-vis{background:#161C21;border:1px solid #232C33;border-radius:14px;padding:16px}
+.cut svg{display:block;width:100%;height:auto}
+.cut .metal{fill:none;stroke:#F0913A;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.cut .dim{stroke:#4A575F;stroke-width:1;stroke-dasharray:3 3}
+.cut .dimtxt{fill:#7E8B94;font:500 9px Onest,sans-serif}
+.cut .load{stroke:#7E8B94;stroke-width:1.4}
+.cut .loadtxt{fill:#AFBAC2;font:600 10px Onest,sans-serif}
+
+.gauge{margin-top:14px}
+.gauge-bar{position:relative;height:10px;border-radius:100px;background:#242D34;overflow:visible}
+.gauge-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:100px;background:#E4553A;
+  transition:width .28s ease,background .28s ease}
+.gauge-bar i.ok{background:#4FA97A}
+.gauge-bar b{position:absolute;top:-5px;bottom:-5px;width:2px;background:#EDF1EE;
+  font-size:0;border-radius:2px}
+.gauge-cap{margin-top:8px;font-size:12.5px;color:#98A5AE}
+.gauge-cap span{font-family:Unbounded,sans-serif;font-weight:600;font-size:16px;color:#fff;
+  font-variant-numeric:tabular-nums}
+
+.check-ctl{display:grid;gap:2px}
+.check-ctl .ctl-row{grid-template-columns:auto 1fr auto;min-height:52px}
+.ctl-row-wide{grid-template-columns:1fr!important;gap:8px!important;padding:8px 0}
+.dark-select select{background:#1B2228;border-color:#2C353C;color:#EDF1EE;min-height:44px}
+.dark-select::after{border-color:#7E8B94}
+.seg-dark{background:#1B2228}
+.seg-dark button{color:#98A5AE;min-height:42px}
+.seg-dark button[aria-pressed="true"]{background:#2A343B;color:#fff;box-shadow:none}
+
+.dark .verdict{margin-top:18px;border-width:1.5px}
+.dark .verdict.pass{background:#16281E;border-color:#3E8B5F}
+.dark .verdict.fail{background:#2B1A17;border-color:#9E4234}
+.dark .verdict p,.dark .verdict .v-title{color:#EDF1EE}
+.dark .verdict .why{color:#98A5AE;border-top-color:#FFFFFF1A}
+
 /* ── факты, шаги, faq ──────────────────────────────────────────────── */
 .facts{display:grid;gap:11px}
 @media (min-width:640px){.facts{grid-template-columns:repeat(3,1fr)}}
@@ -532,73 +583,67 @@ footer p{margin-bottom:8px}
 </section>
 
 <!-- ПРОВЕРКА СТЕЛЛАЖА -->
-<section class="rise">
+<section class="dark rise" id="proverka">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Проверка за 10 секунд</div>
+      <div class="eyebrow eyebrow-hero">Проверка за 10 секунд</div>
       <h2>Выдержит ли ваш стеллаж 120 кг</h2>
-      <p class="sub">Большинство стеллажей, которые стоят в пунктах сегодня, рассчитаны
-      на 30–100 кг. Расчёт ниже — по ГОСТ Р 55525-2017, с проверкой прочности, прогиба и
-      местной устойчивости полки. Посмотрите на торец своей полки и введите размеры.</p>
+      <p class="sub sub-dark">Посмотрите на торец своей полки и введите размеры.
+      Считаем по ГОСТ Р 55525-2017: прочность, прогиб и устойчивость.</p>
     </div>
 
-    <div class="card card-lg">
-      <div class="field">
-        <div class="field-top">
-          <label for="cw">Ширина полки</label>
-          <span class="val" id="cwVal">120 см</span>
+    <div class="check-grid">
+      <div class="check-vis">
+        <div class="cut" id="cutWrap" aria-hidden="true"></div>
+        <div class="gauge">
+          <div class="gauge-bar"><i id="gaugeFill"></i><b id="gaugeMark">120 кг</b></div>
+          <div class="gauge-cap"><span id="gaugeNum">—</span> при требуемых 120 кг</div>
         </div>
-        <input type="range" id="cw" min="80" max="150" step="5" value="120">
       </div>
 
-      <div class="grid2">
-        <div class="field">
-          <label for="ct">Толщина металла полки</label>
-          <div class="selectwrap">
+      <div class="check-ctl">
+        <div class="ctl-row">
+          <label for="cw">Ширина полки</label>
+          <input type="range" id="cw" min="80" max="150" step="5" value="120">
+          <output id="cwVal" for="cw">120 см</output>
+        </div>
+        <div class="ctl-row">
+          <label for="ct">Толщина металла</label>
+          <div class="selectwrap dark-select">
             <select id="ct">
-              <option value="0.5">0,5 мм</option>
-              <option value="0.6" selected>0,6 мм</option>
-              <option value="0.7">0,7 мм</option>
-              <option value="0.8">0,8 мм</option>
-              <option value="1.0">1,0 мм</option>
-              <option value="1.2">1,2 мм</option>
+              <option value="0.5">0,5 мм</option><option value="0.6" selected>0,6 мм</option>
+              <option value="0.7">0,7 мм</option><option value="0.8">0,8 мм</option>
+              <option value="1.0">1,0 мм</option><option value="1.2">1,2 мм</option>
             </select>
           </div>
-          <div class="hint">Если не знаете — 0,6 мм у большинства лёгких серий.</div>
         </div>
-        <div class="field">
-          <label for="cb">Высота бортика полки</label>
-          <div class="selectwrap">
+        <div class="ctl-row">
+          <label for="cb">Высота бортика</label>
+          <div class="selectwrap dark-select">
             <select id="cb">
-              <option value="20">20 мм</option>
-              <option value="30" selected>30 мм</option>
-              <option value="40">40 мм</option>
-              <option value="50">50 мм</option>
+              <option value="20">20 мм</option><option value="30" selected>30 мм</option>
+              <option value="40">40 мм</option><option value="50">50 мм</option>
               <option value="60">60 мм</option>
             </select>
           </div>
-          <div class="hint">Загнутый вниз край по длинной стороне.</div>
+        </div>
+        <div class="ctl-row ctl-row-wide">
+          <span class="grouplabel" id="lipLbl">Край загнут внутрь ещё раз?</span>
+          <div class="seg seg-dark" role="group" aria-labelledby="lipLbl">
+            <button type="button" data-lip="0" aria-pressed="true">Нет</button>
+            <button type="button" data-lip="12" aria-pressed="false">Да, двойной подгиб</button>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="field">
-        <div class="field-top"><span class="grouplabel" id="lipLbl">Край бортика загнут внутрь ещё раз?</span></div>
-        <div class="seg" role="group" aria-labelledby="lipLbl">
-          <button type="button" data-lip="0" aria-pressed="true">Нет, просто загиб</button>
-          <button type="button" data-lip="12" aria-pressed="false">Да, двойной подгиб</button>
-        </div>
-        <div class="hint">Это решает больше, чем толщина металла: двойной подгиб может
-        поднять несущую способность втрое.</div>
+    <div class="verdict fail" id="verdict" aria-live="polite">
+      <div class="v-top">
+        <div class="v-ico" id="vIco">!</div>
+        <div class="v-title" id="vTitle">—</div>
       </div>
-
-      <div class="verdict fail" id="verdict" aria-live="polite">
-        <div class="v-top">
-          <div class="v-ico" id="vIco">!</div>
-          <div class="v-title" id="vTitle">—</div>
-        </div>
-        <p id="vText">—</p>
-        <div class="why" id="vWhy">—</div>
-      </div>
+      <p id="vText">—</p>
+      <div class="why" id="vWhy">—</div>
     </div>
   </div>
 </section>
@@ -1028,9 +1073,49 @@ footer p{margin-bottom:8px}
 
   /* ── проверка стеллажа ──────────────────────────────────────────── */
   var chk = { w:120, t:0.6, b:30, lip:0 };
+  /* Сечение полки в разрезе. Показываем ровно ту геометрию, которую человек
+     ввёл: лист, борт вниз и загиб внутрь, если он есть. Именно эта картинка
+     объясняет, почему одна и та же толщина металла держит и 29, и 154 кг. */
+  function drawCut(t, bort, lip){
+    var W = 260, H = 120, x0 = 30, x1 = W - 56, yTop = 46;
+    var sc = 0.62;                       // масштаб миллиметров в пиксели
+    var hB = bort * sc, hL = Math.min(lip * sc, 22);
+    var d = 'M' + x0 + ' ' + (yTop + hB);
+    if (lip > 0) d += ' h' + hL;
+    d = 'M' + (x0 + (lip > 0 ? hL : 0)) + ' ' + (yTop + hB) +
+        (lip > 0 ? ' H' + x0 : '') + ' V' + yTop + ' H' + x1 + ' V' + (yTop + hB) +
+        (lip > 0 ? ' h-' + hL : '');
+    var arrows = '';
+    for (var i = 0; i < 7; i++){
+      var ax = x0 + 8 + i * ((x1 - x0 - 16) / 6);
+      arrows += '<line class="load" x1="' + ax.toFixed(0) + '" y1="14" x2="' + ax.toFixed(0) +
+        '" y2="' + (yTop - 6) + '"/><path class="load" d="M' + (ax-3).toFixed(0) + ' ' +
+        (yTop-11) + ' L' + ax.toFixed(0) + ' ' + (yTop-5) + ' L' + (ax+3).toFixed(0) + ' ' +
+        (yTop-11) + '" fill="none"/>';
+    }
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Сечение полки: ' +
+      'борт ' + bort + ' мм' + (lip ? ' с двойным подгибом' : ' без подгиба') + '">' +
+      arrows + '<text class="loadtxt" x="' + (W/2) + '" y="9" text-anchor="middle">120 кг на полку</text>' +
+      '<path class="metal" d="' + d + '"/>' +
+      '<line class="dim" x1="' + (x1 + 12) + '" y1="' + yTop + '" x2="' + (x1 + 12) +
+        '" y2="' + (yTop + hB) + '"/>' +
+      '<text class="dimtxt" x="' + (x1 + 16) + '" y="' + (yTop + hB/2 + 3) + '">борт ' + bort + '</text>' +
+      '<text class="dimtxt" x="' + (x0 - 4) + '" y="' + (yTop - 7) + '" text-anchor="end" ' +
+        'style="fill:#F0913A">' + String(t).replace('.', ',') + '</text>' +
+      (lip ? '<text class="dimtxt" x="' + (x0 - 2) + '" y="' + (yTop + hB + 14) +
+        '">подгиб ' + lip + '</text>' : '') + '</svg>';
+  }
+
   function recheck(){
     var span = chk.w * 10 - 40;            // пролёт между стойками, мм
     var held = maxLoadKg(span, 400, chk.t, chk.b, '08пс', 0, chk.lip);
+    $('cutWrap').innerHTML = drawCut(chk.t, chk.b, chk.lip);
+    var pct = Math.min(100, held / 180 * 100);
+    var gf = $('gaugeFill');
+    gf.style.width = pct.toFixed(1) + '%';
+    gf.className = held >= 120 ? 'ok' : '';
+    $('gaugeMark').style.left = (120 / 180 * 100).toFixed(1) + '%';
+    $('gaugeNum').textContent = held + ' кг';
     var box = $('verdict'), ok = held >= 120;
     box.className = 'verdict ' + (ok ? 'pass' : 'fail');
     $('vIco').textContent = ok ? '✓' : '!';
