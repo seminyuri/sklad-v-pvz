@@ -219,6 +219,8 @@ section{padding:44px 0}
 
 .lost{margin-top:8px;padding:8px 12px;border-radius:10px;background:#2B1A17;
   border:1px solid #4A2A22;font-size:12.5px;line-height:1.35;color:#E8CEC6}
+.lost.lost-cold{background:#1D252B;border-color:#33404A;color:#AFBAC2}
+.lost.lost-cold b{color:#EDF1EE}
 .lost b{color:#EB7259;font-variant-numeric:tabular-nums;white-space:nowrap}
 .panel-split{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#232C33;
   margin-top:10px;border-radius:10px;overflow:hidden}
@@ -1102,9 +1104,23 @@ input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;marg
        обработку. Поэтому берём весь доход, а не только его часть. Никаких
        выдуманных «акций до конца недели»: срок здесь настоящий. */
     var perDay = r.total / 30;
+    var months = r.total > 0 ? KIT_PRICE * state.racks / r.total : Infinity;
     $('lost').hidden = r.total <= 0;
-    $('lostText').innerHTML = 'Пока стеллажа нет, не начисляется <b>' + fmt(perDay) +
-      ' ₽ в день</b> — <b>' + fmt(perDay * 7) + ' ₽</b> за неделю.';
+
+    /* Если окупаемость уходит за год — говорим об этом прямо, вместо того чтобы
+       подсвечивать потери. Калькулятор, который при любых вводных советует
+       покупать, ничего не стоит; признание «вам это невыгодно» — единственное,
+       что делает остальные цифры заслуживающими доверия. */
+    if (months > 12) {
+      $('lost').className = 'lost lost-cold';
+      $('lostText').innerHTML = 'При таком потоке и загрузке комплект окупится ' +
+        'дольше года. Честно: <b>пока не стоит</b> — вернитесь к расчёту, когда ' +
+        'поток вырастет или появится место под ячейки.';
+    } else {
+      $('lost').className = 'lost';
+      $('lostText').innerHTML = 'Пока стеллажа нет, не начисляется <b>' + fmt(perDay) +
+        ' ₽ в день</b> — <b>' + fmt(perDay * 7) + ' ₽</b> за неделю.';
+    }
 
     var free = +$('freeM2').value;
     var fit = racksFit(free, state.width);
