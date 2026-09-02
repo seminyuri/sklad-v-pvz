@@ -542,6 +542,32 @@ input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;marg
 .brk-n{margin:0;font-size:13.5px;line-height:1.5;color:var(--ink-2)}
 .brk-out{margin:15px 0 0;font-size:14.5px;line-height:1.5}
 @media (min-width:700px){.brk{grid-template-columns:1fr 1fr}}
+.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.mini{border-collapse:collapse;width:100%;font-size:13.5px}
+table.mini th,table.mini td{padding:9px 8px;text-align:left;border-bottom:1px solid var(--line-soft)}
+table.mini th:first-child,table.mini td:first-child{padding-left:0;width:1%;white-space:nowrap}
+table.mini th{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);
+  font-weight:600;background:var(--surface-2)}
+table.mini td.num,table.mini th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.mini tr.enough td{color:var(--ok);font-weight:600}
+table.mini tbody tr:last-child td{border-bottom:0}
+.tiny2{color:var(--ink-2)}
+/* На узком экране таблица из трёх колонок не влезает и уезжает вбок — на
+   лендинге это хуже, чем отсутствие таблицы. Ниже 430 px строки становятся
+   блоками с подписями, и прокручивать нечего. */
+@media (max-width:430px){
+  table.mini thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  table.mini,table.mini tbody,table.mini tr,table.mini td{display:block;width:auto}
+  table.mini tr{padding:11px 0;border-bottom:1px solid var(--line-soft)}
+  table.mini tbody tr:last-child{border-bottom:0}
+  table.mini td{padding:0;border:0}
+  table.mini td:first-child{font-weight:600;margin-bottom:3px}
+  table.mini td:first-child::after{content:" стеллаж" attr(data-suffix)}
+  table.mini td.num{text-align:left;color:var(--ink-2)}
+  table.mini td.num::after{content:" за размещение"}
+  table.mini td:last-child::before{content:"добрать: ";color:var(--ink-2)}
+  table.mini tr.enough td:last-child::before{content:""}
+}
 </style>
 </head>
 <body>
@@ -745,34 +771,43 @@ input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;marg
   </div>
 </section>
 
-<!-- ОТКУДА 15 ТЫСЯЧ ИЗ НОВОСТЕЙ -->
+<!-- 15 ТЫСЯЧ: СКОЛЬКО ДЛЯ ЭТОГО НУЖНО СТЕЛЛАЖЕЙ -->
 <section class="rise" id="pyatnadcat">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Цифра из новостей</div>
-      <h2>«15 тысяч со стеллажа» — откуда они</h2>
-      <p class="sub">Столько Ozon прогнозировал владельцам сетей пунктов. Цифра
-      не выдумана, но она не про любой пункт. Разложим её по тарифам программы.</p>
+      <div class="eyebrow">Цифра Ozon</div>
+      <h2>«Порядка 15 тысяч в месяц» — сколько для этого нужно стеллажей</h2>
+      <p class="sub">Столько Ozon называет дополнительным заработком пункта. Цифра
+      официальная, но она про пункт, а не про один стеллаж. Вот та же цифра,
+      разложенная по тарифам самой программы.</p>
     </div>
+
     <div class="card card-lg">
       <div class="brk">
         <div class="brk-row">
-          <div class="brk-h"><span class="brk-k">За размещение</span><span class="brk-v" id="brkPlace">—</span></div>
-          <p class="brk-n">И это потолок. Стеллаж 120 см — <b id="brkBoxes">24</b>&nbsp;ячейки,
-          <b id="brkCap">914</b>&nbsp;литров, платят 0,2&nbsp;₽ за литр в день. Забитый
-          под завязку, больше он не даёт физически.</p>
+          <div class="brk-h"><span class="brk-k">Потолок одного стеллажа</span><span class="brk-v" id="brkPlace">—</span></div>
+          <p class="brk-n">За размещение платят 0,2&nbsp;₽ за литр в день. Стеллаж 120&nbsp;см —
+          <b id="brkBoxes">24</b>&nbsp;ячейки, <b id="brkCap">914</b>&nbsp;литров. Забитый под
+          завязку, больше он не даёт физически: это предел, а не осторожная оценка.</p>
         </div>
         <div class="brk-row">
-          <div class="brk-h"><span class="brk-k">Остальное — операции</span><span class="brk-v" id="brkOps">—</span></div>
-          <p class="brk-n">По 25&nbsp;₽ за возврат: 15 за обработку, 5 за перенос в
-          ячейку, 5 за подготовку к отправке. Чтобы добрать до пятнадцати тысяч,
-          нужно <b id="brkRet">—</b> <span id="brkRetW">возврата</span> в месяц — это
-          <b id="brkDay">—</b> в день.</p>
+          <div class="brk-h"><span class="brk-k">Цена одного возврата</span><span class="brk-v">25&nbsp;₽</span></div>
+          <p class="brk-n">15&nbsp;₽ за обработку, 5&nbsp;₽ за перенос в ячейку, 5&nbsp;₽ за
+          подготовку к отправке. Эта часть зависит только от потока и не упирается
+          в ёмкость.</p>
         </div>
       </div>
-      <p class="brk-out">Пятнадцать тысяч — это крупный пункт с плотным потоком и
-      полной загрузкой. Калькулятор наверху считает по вашим числам, а не по чужим:
-      поставьте свой поток и увидите свою сумму.</p>
+
+      <div class="tblwrap" style="margin-top:16px">
+        <table class="mini">
+          <thead><tr><th>Стеллажей</th><th class="num">За размещение</th><th>Сколько возвратов добрать до 15&nbsp;000</th></tr></thead>
+          <tbody id="brkRows"></tbody>
+        </table>
+      </div>
+
+      <p class="brk-out">Одним стеллажом пятнадцать тысяч собираются только при очень
+      плотном потоке. Двумя — при обычном. Тремя — одним размещением, без единого
+      возврата. Калькулятор наверху считает по вашим числам, а не по средним.</p>
     </div>
   </div>
 </section>
@@ -1424,22 +1459,38 @@ input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;marg
     if (html) box.innerHTML = html; else $('contacts').hidden = true;
   })();
 
-  /* ── разбор новостной цифры «15 тысяч со стеллажа» ──────────────── */
+  /* ── разбор цифры Ozon «порядка 15 тысяч в месяц» ───────────────── */
   /* Считаем той же функцией, что и калькулятор: иначе страница спорила бы
-     сама с собой, а разойтись эти два числа могут молча. */
+     сама с собой, а разойтись эти числа могут молча. */
   (function () {
     var one = pvzIncome({ racks:1, widthCm:120, levels:6, fill:1, returnsPerMonth:0 });
     var perOp = 25, target = 15000;
-    var rest = target - one.ceiling;
-    var need = Math.round(rest / perOp);
     var set = function (id, v) { var e = $(id); if (e) e.textContent = v; };
     set('brkPlace', fmt(one.ceiling) + '\u00A0\u20BD');
-    set('brkOps',   fmt(rest) + '\u00A0\u20BD');
     set('brkBoxes', one.boxes);
     set('brkCap',   fmt(one.capacity));
-    set('brkRet',   fmt(need));
-    set('brkRetW',  plural(need, 'возврат', 'возврата', 'возвратов'));
-    set('brkDay',   Math.round(need / 30));
+
+    var rows = $('brkRows');
+    if (!rows) return;
+    var html = '';
+    for (var n = 1; n <= 3; n++) {
+      var place = one.ceiling * n;
+      var rest  = target - place;
+      var cell, cls = '';
+      if (rest <= 0) {
+        cls = ' class="enough"';
+        cell = 'нисколько — размещение уже больше';
+      } else {
+        var need = Math.round(rest / perOp);
+        cell = fmt(need) + ' ' + plural(need, 'возврат', 'возврата', 'возвратов') +
+               ' в месяц <span class="tiny2">— ' + (rest / perOp / 30).toFixed(1).replace('.', ',') +
+               ' в день</span>';
+      }
+      html += '<tr' + cls + '><td data-suffix="' +
+              plural(n, '', 'а', 'ей') + '">' + n + '</td><td class="num">' + fmt(place) +
+              '\u00A0\u20BD</td><td>' + cell + '</td></tr>';
+    }
+    rows.innerHTML = html;
   })();
 
   /* ── липкая кнопка и появление секций ───────────────────────────── */
