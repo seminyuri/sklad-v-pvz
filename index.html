@@ -27,10 +27,15 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('js
    ───────────────────────────────────────────────────────────────────────── */
 :root{
   --bg:#EDEFEC; --bg-2:#E3E7E2; --card:#FFFFFF;
-  --ink:#12171B; --ink-2:#59636C; --ink-3:#8A939B;
+  --ink:#12171B; --ink-2:#59636C; --ink-3:#646D75;
   --line:#D2D8D2; --line-2:#E4E8E3;
   --brand:#173250; --brand-ink:#FFFFFF;
-  --signal:#D96E07; --signal-soft:#FBEBDC;
+  /* Заливка и текст акцента разведены намеренно: один и тот же оранжевый не
+     может одновременно давать 4,5 с белым текстом на себе и 4,5 сам на светлом
+     фоне. Проверено расчётом контраста, а не на глаз. */
+  --signal:#B85B02;        /* заливка кнопок: белый на ней даёт 4,63 */
+  --signal-ink:#A24F01;    /* акцентный текст на светлом: 4,97 на фоне */
+  --signal-soft:#FAEADB;
   --ok:#1C7340; --ok-soft:#E1F0E6;
   --bad:#B32D18; --bad-soft:#FAE6E1;
   --shadow-s:0 1px 2px rgba(18,23,27,.07);
@@ -44,7 +49,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('js
     --ink:#EAEEEA; --ink-2:#9BA5AD; --ink-3:#6F7A83;
     --line:#2A333A; --line-2:#232B31;
     --brand:#D7E3F2; --brand-ink:#12171B;
-    --signal:#F0913A; --signal-soft:#33261A;
+    --signal:#F0913A; --signal-ink:#F0913A; --signal-soft:#33261A;
     --ok:#5FB783; --ok-soft:#16281E;
     --bad:#E47963; --bad-soft:#2B1A17;
     --shadow-s:0 1px 2px rgba(0,0,0,.5);
@@ -57,7 +62,7 @@ if ('IntersectionObserver' in window) document.documentElement.classList.add('js
   --ink:#EAEEEA; --ink-2:#9BA5AD; --ink-3:#6F7A83;
   --line:#2A333A; --line-2:#232B31;
   --brand:#D7E3F2; --brand-ink:#12171B;
-  --signal:#F0913A; --signal-soft:#33261A;
+  --signal:#F0913A; --signal-ink:#F0913A; --signal-soft:#33261A;
   --ok:#5FB783; --ok-soft:#16281E;
   --bad:#E47963; --bad-soft:#2B1A17;
   --shadow-s:0 1px 2px rgba(0,0,0,.5);
@@ -75,7 +80,7 @@ body{
 }
 img{max-width:100%;display:block}
 button,input,select{font:inherit;color:inherit}
-a{color:var(--signal)}
+a{color:var(--signal-ink)}
 :focus-visible{outline:3px solid var(--signal);outline-offset:2px;border-radius:4px}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;
@@ -114,7 +119,7 @@ h3{font-size:17px;font-weight:600;letter-spacing:-.01em}
 p{margin:0 0 14px}
 .sub{color:var(--ink-2);font-size:16px}
 .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;
-  letter-spacing:.05em;text-transform:uppercase;color:var(--signal);margin-bottom:12px}
+  letter-spacing:.05em;text-transform:uppercase;color:var(--signal-ink);margin-bottom:12px}
 .eyebrow::before{content:"";width:20px;height:2px;background:var(--signal)}
 section{padding:44px 0}
 @media (min-width:900px){section{padding:72px 0}}
@@ -172,7 +177,9 @@ section{padding:44px 0}
   margin-bottom:10px}
 
 /* схема стеллажа: ячейки заполняются по мере роста загрузки */
-.rack{flex:none;width:96px}
+/* Место под схему резервируем заранее: она рисуется скриптом, и без
+   резерва страница дёргается при загрузке (замер дал CLS 0,137). */
+.rack{flex:none;width:96px;aspect-ratio:100/132}
 .rack svg{display:block;width:100%;height:auto}
 .rack .cellOn{fill:#F0913A}
 .rack .cellOff{fill:#222B32}
@@ -182,7 +189,7 @@ section{padding:44px 0}
 .panel-num{min-width:0}
 .pn-cap{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#7E8B94;margin-bottom:2px}
 .pn-big{font-family:Unbounded,sans-serif;font-weight:700;font-size:clamp(30px,8.6vw,42px);
-  line-height:1;letter-spacing:-.03em;color:#fff;font-variant-numeric:tabular-nums}
+  line-height:1;min-height:1em;letter-spacing:-.03em;color:#fff;font-variant-numeric:tabular-nums}
 .pn-big small{font-size:.42em;font-weight:600;color:#98A5AE;letter-spacing:0}
 .pn-sub{font-size:12.5px;color:#98A5AE;margin-top:6px;font-variant-numeric:tabular-nums}
 .pn-pay{font-size:12.5px;color:#7BC79A;margin-top:3px;font-variant-numeric:tabular-nums}
@@ -217,7 +224,7 @@ section{padding:44px 0}
   font-variant-numeric:tabular-nums}
 .panel-split i{display:block;font-style:normal;font-size:11px;color:#7E8B94;margin-top:2px}
 
-.panel-note{font-size:11.5px;line-height:1.4;color:#6E7A83;margin:10px 0 0}
+.panel-note{font-size:11.5px;line-height:1.4;color:#7E8B94;margin:10px 0 0}
 .hero .upsell{background:#1D252B;margin-top:10px;padding:9px 12px}
 .hero .up-txt{font-size:13px}
 .hero .up-txt{color:#AFBAC2}
@@ -241,7 +248,7 @@ section{padding:44px 0}
   .card-lg .grid2{max-width:520px}
 }
 .deadline{display:inline-flex;align-items:center;gap:8px;background:var(--signal-soft);
-  color:var(--signal);border-radius:100px;padding:7px 14px;font-size:13.5px;font-weight:600;
+  color:var(--signal-ink);border-radius:100px;padding:7px 14px;font-size:13.5px;font-weight:600;
   margin-bottom:16px}
 .deadline b{font-variant-numeric:tabular-nums}
 
@@ -252,7 +259,7 @@ section{padding:44px 0}
 .field-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px}
 .field label,.grouplabel{font-weight:600;font-size:15px}
 .field .val{font-family:Unbounded,sans-serif;font-weight:600;font-size:17px;
-  font-variant-numeric:tabular-nums;color:var(--signal);white-space:nowrap}
+  font-variant-numeric:tabular-nums;color:var(--signal-ink);white-space:nowrap}
 .field .hint{font-size:12.5px;color:var(--ink-3);margin-top:7px;line-height:1.4}
 
 input[type=range]{
@@ -295,7 +302,7 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.12)}
 .payback{display:flex;align-items:center;gap:10px;margin-top:16px;padding:13px 15px;
   background:var(--ok-soft);border-radius:var(--r-s);font-size:14.5px;position:relative}
 .payback b{font-variant-numeric:tabular-nums;color:var(--ok);white-space:nowrap}
-.upsell{display:flex;align-items:center;gap:12px;margin-top:10px;padding:12px 14px;
+.upsell{display:flex;align-items:center;gap:12px;margin-top:10px;min-height:58px;padding:12px 14px;
   border-radius:var(--r-s);background:color-mix(in srgb,var(--brand-ink) 9%,transparent);
   position:relative;flex-wrap:wrap}
 .up-txt{flex:1;min-width:180px;font-size:13.5px;line-height:1.4}
@@ -310,7 +317,7 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.12)}
 .grid2{display:grid;gap:12px}
 @media (min-width:640px){.grid2{grid-template-columns:1fr 1fr}}
 .fit{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
-.fit-out{font-size:14px;color:var(--ink-2);line-height:1.45}
+.fit-out{font-size:14px;color:var(--ink-2);line-height:1.45;min-height:3em}
 .fit-out b{color:var(--ink);font-variant-numeric:tabular-nums}
 .selectwrap{position:relative}
 select{width:100%;min-height:52px;padding:13px 40px 13px 14px;border-radius:var(--r-s);
@@ -351,6 +358,7 @@ select{width:100%;min-height:52px;padding:13px 40px 13px 14px;border-radius:var(
 
 /* сечение полки в разрезе: видно, что именно держит нагрузку */
 .check-vis{background:#161C21;border:1px solid #232C33;border-radius:14px;padding:16px}
+.cut{aspect-ratio:260/120}
 .cut svg{display:block;width:100%;height:auto}
 .cut .metal{fill:none;stroke:#F0913A;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
 .cut .dim{stroke:#4A575F;stroke-width:1;stroke-dasharray:3 3}
