@@ -207,7 +207,7 @@ section{padding:44px 0}
 .ctl-row input[type=range]::-webkit-slider-thumb{width:26px;height:26px;margin-top:-10.5px;
   border-color:#161C21}
 .ctl-row input[type=range]::-moz-range-thumb{width:26px;height:26px;border-color:#161C21}
-.sr-range{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
 
 .stepper{display:flex;align-items:center;gap:2px;justify-self:end;background:#1D252B;
   border-radius:9px;padding:3px}
@@ -465,6 +465,35 @@ footer p{margin-bottom:8px}
 .js .rise{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
 .js .rise.seen{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.js .rise{opacity:1;transform:none}}
+
+/* ── контакты в подвале ────────────────────────────────────────────── */
+.contacts{background:var(--card);border:1px solid var(--line-2);border-radius:var(--r);
+  padding:16px;margin-bottom:18px}
+.contacts b{display:block;font-size:15.5px;color:var(--ink);margin-bottom:10px}
+.contact-links{display:flex;flex-wrap:wrap;gap:9px}
+.contact-links a{display:inline-flex;align-items:center;justify-content:center;
+  min-height:48px;padding:0 18px;border-radius:var(--r-s);border:1.5px solid var(--line);
+  text-decoration:none;font-weight:600;font-size:15px;color:var(--ink)}
+.contact-links a:hover{background:var(--bg-2)}
+.contact-links a.tg{background:var(--signal);color:#fff;border-color:transparent}
+
+/* ── размер тач-целей: 44 px по рекомендации WCAG 2.2 ──────────────────
+   Замер на экране 320 px показал кнопки степпера 38 px, ползунки 38 px и
+   ссылку в подвале высотой 17 px. На телефоне это промахи пальцем, а не
+   придирка автоматики. */
+.stepper button{width:44px;height:44px}
+.ctl-row input[type=range]{height:44px}
+.ctl-row input[type=range]::-webkit-slider-thumb{margin-top:-13.5px}
+.up-btn{min-height:44px}
+.seg-dark button{min-height:44px}
+
+/* Скрытый ползунок для доступности степпера: убираем из потока полностью,
+   иначе он растягивает страницу и даёт горизонтальный вылет. */
+/* Селектор с типом и атрибутом: голый класс проигрывал по специфичности
+   правилу input[type=range], и скрытый ползунок оставался шириной во весь
+   экран. Видно это было только замером — визуально его прячет clip-path. */
+input[type=range].sr-range{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap;border:0}
 </style>
 </head>
 <body>
